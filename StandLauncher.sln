@@ -1,0 +1,104 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28306.52
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj", "{C325DF0E-4D5F-4916-AF05-FC1A82318CA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF\WPF.csproj", "{83F16DA9-C935-4D48-BEC9-2F4E63DE9D67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinForms", "WinForms\WinForms.csproj", "{A0E4C08F-C65B-4F61-A068-03136064BC13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IconExtractor", "#adds\IconExtractor_src\IconExtractor\IconExtractor.csproj", "{FDFD4EEB-C202-4D93-A6E9-D8984A12D014}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuningGameStand", "TuningGameStand\TuningGameStand.csproj", "{D8620314-7A74-4086-9248-262AB03D4E41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Overlay.NET", "#adds\Overlay.NET-master\Overlay.NET-master\src\Overlay.NET\Overlay.NET.csproj", "{2D411EA5-BC00-4630-B25E-43C554323E72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobalTouchDemo", "GlobalTouchDemo\GlobalTouchDemo.csproj", "{BDFFBF13-DFB3-4253-BA53-D70406802F4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFTouchTest1", "WPFTouchTest1\WPFTouchTest1.csproj", "{A6123332-6D20-42AE-B7EB-02197C9952B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchTest2", "TouchTest2\TouchTest2.csproj", "{30D55604-02DA-4DE0-B4F8-55DA323213A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseHook2", "MouseHook2\MouseHook2.csproj", "{E155ED2D-60BE-454F-A0ED-3967539F3253}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFMouseHook2", "WPFMouseHook2\WPFMouseHook2.csproj", "{03813512-E9EC-441E-979D-C7A02A9530D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchHookDLL", "TouchHookDLL\TouchHookDLL.csproj", "{DEEC86A4-5F85-4FA3-933E-170E11D64D81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFOwnTouchHoook", "WPFOwnTouchHoook\WPFOwnTouchHoook.csproj", "{7EA824C3-4EF9-42C1-B687-C3AEDEEE7BC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IniSaver", "IniSaver\IniSaver.csproj", "{8FD63C6D-1C07-455F-84FF-CFA1C5C33985}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskbarHide", "#adds\TaskbarHide_v1_2\TaskbarHide\TaskbarHide.csproj", "{517EDC10-7EE4-49B3-B656-A9C496CE651C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApp1", "WindowsFormsApp1\WindowsFormsApp1.csproj", "{10606095-8D2A-433C-B847-697E9121FA00}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C325DF0E-4D5F-4916-AF05-FC1A82318CA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C325DF0E-4D5F-4916-AF05-FC1A82318CA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C325DF0E-4D5F-4916-AF05-FC1A82318CA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C325DF0E-4D5F-4916-AF05-FC1A82318CA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83F16DA9-C935-4D48-BEC9-2F4E63DE9D67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83F16DA9-C935-4D48-BEC9-2F4E63DE9D67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83F16DA9-C935-4D48-BEC9-2F4E63DE9D67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83F16DA9-C935-4D48-BEC9-2F4E63DE9D67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0E4C08F-C65B-4F61-A068-03136064BC13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0E4C08F-C65B-4F61-A068-03136064BC13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0E4C08F-C65B-4F61-A068-03136064BC13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDFD4EEB-C202-4D93-A6E9-D8984A12D014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDFD4EEB-C202-4D93-A6E9-D8984A12D014}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDFD4EEB-C202-4D93-A6E9-D8984A12D014}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8620314-7A74-4086-9248-262AB03D4E41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8620314-7A74-4086-9248-262AB03D4E41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8620314-7A74-4086-9248-262AB03D4E41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D411EA5-BC00-4630-B25E-43C554323E72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D411EA5-BC00-4630-B25E-43C554323E72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D411EA5-BC00-4630-B25E-43C554323E72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDFFBF13-DFB3-4253-BA53-D70406802F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDFFBF13-DFB3-4253-BA53-D70406802F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDFFBF13-DFB3-4253-BA53-D70406802F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6123332-6D20-42AE-B7EB-02197C9952B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6123332-6D20-42AE-B7EB-02197C9952B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6123332-6D20-42AE-B7EB-02197C9952B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30D55604-02DA-4DE0-B4F8-55DA323213A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30D55604-02DA-4DE0-B4F8-55DA323213A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30D55604-02DA-4DE0-B4F8-55DA323213A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E155ED2D-60BE-454F-A0ED-3967539F3253}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E155ED2D-60BE-454F-A0ED-3967539F3253}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E155ED2D-60BE-454F-A0ED-3967539F3253}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03813512-E9EC-441E-979D-C7A02A9530D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03813512-E9EC-441E-979D-C7A02A9530D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03813512-E9EC-441E-979D-C7A02A9530D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEEC86A4-5F85-4FA3-933E-170E11D64D81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEEC86A4-5F85-4FA3-933E-170E11D64D81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEEC86A4-5F85-4FA3-933E-170E11D64D81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EA824C3-4EF9-42C1-B687-C3AEDEEE7BC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EA824C3-4EF9-42C1-B687-C3AEDEEE7BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EA824C3-4EF9-42C1-B687-C3AEDEEE7BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD63C6D-1C07-455F-84FF-CFA1C5C33985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FD63C6D-1C07-455F-84FF-CFA1C5C33985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FD63C6D-1C07-455F-84FF-CFA1C5C33985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD63C6D-1C07-455F-84FF-CFA1C5C33985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{517EDC10-7EE4-49B3-B656-A9C496CE651C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{517EDC10-7EE4-49B3-B656-A9C496CE651C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{517EDC10-7EE4-49B3-B656-A9C496CE651C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{517EDC10-7EE4-49B3-B656-A9C496CE651C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10606095-8D2A-433C-B847-697E9121FA00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10606095-8D2A-433C-B847-697E9121FA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10606095-8D2A-433C-B847-697E9121FA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10606095-8D2A-433C-B847-697E9121FA00}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EEBF34F2-E572-4CF8-81AD-1ED0B3CA96E4}
+	EndGlobalSection
+EndGlobal

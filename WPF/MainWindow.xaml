@@ -1,0 +1,103 @@
+﻿<Window x:Class="WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
+        xmlns:local="clr-namespace:WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Width="1280" Height="720" ResizeMode="NoResize" 
+        Topmost="False"  WindowStyle="None"  Loaded="Window_Loaded" Closed="Window_Closed">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" 
+                             StartPoint="0.5,0">
+            <GradientStop Color="#FF1728CB"/>
+            <GradientStop Color="#FF4EE0D9" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Window.Resources>
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="90*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid x:Name="gamesGrid" Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+            <Image x:Name="imgTest" 
+               HorizontalAlignment="Stretch" 
+               Margin="30,10,6,3" 
+               VerticalAlignment="Stretch" 
+               Stretch="None" 
+               MouseUp="imgTest_MouseUp" 
+               TouchDown="ImgTest_TouchDown" 
+               AutomationProperties.HelpText="TExt"                
+               AutomationProperties.IsRowHeader="True" 
+               AutomationProperties.ItemStatus="Some Text" 
+               AutomationProperties.Name="Name Text"
+               />
+            <Button x:Name="button" 
+                    Content="Start Main" 
+                    Grid.Column="1" 
+                    HorizontalAlignment="Left" 
+                    Height="64" 
+                    Margin="9,51,0,0" Grid.Row="1" 
+                    VerticalAlignment="Top" 
+                    Width="120" 
+                    Click="button_Click"/>
+            <Label x:Name="label"
+               Content="Angry Birds Space Invaders" 
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               Margin="10,195,10,5"
+               FontSize="20" 
+               FontFamily="Adobe Gothic Std B" 
+               HorizontalContentAlignment="Center"
+               />
+            <Button x:Name="button1" 
+                Content="Test1" 
+                Grid.Column="3" 
+                HorizontalAlignment="Left" 
+                Margin="23,23,0,0" 
+                Grid.Row="1" 
+                VerticalAlignment="Top" 
+                Width="129" Height="46" 
+                Click="button1_Click"/>
+            <Button x:Name="button2" Content="bool Test = true" Grid.Column="2" HorizontalAlignment="Left" Height="56" Margin="122,15,0,0" VerticalAlignment="Top" Width="156" Click="button2_Click" Grid.ColumnSpan="3"/>
+            <Button x:Name="button3" Content="bool Test = false" Grid.Column="2" HorizontalAlignment="Left" Height="51" Margin="127,92,0,0" VerticalAlignment="Top" Width="150" Click="button3_Click" Grid.ColumnSpan="3"/>
+            <TextBlock x:Name="textBlock" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Grid.Column="2" Grid.Row="1" TextWrapping="Wrap" Text="Shantae and the Piratcy Bay of the black wolf" FontSize="22" TextAlignment="Center" FontFamily="Arial"/>
+        </Grid>
+        <Label x:Name="label1" 
+               Content="Игры" 
+               Grid.Column="1" 
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               HorizontalContentAlignment="Center"
+               VerticalContentAlignment="Center" 
+               FontSize="48" 
+               FontFamily="Adobe Caslon Pro Bold" 
+               Foreground="#FFE2EBEC"
+               />
+    </Grid>
+</Window>
