@@ -33,6 +33,7 @@ namespace Logic
         {
             shellObjectType = Type.GetTypeFromProgID("WScript.Shell");
             windowsShell = Activator.CreateInstance(shellObjectType);
+            //SystemManager.OnScreenSaverDetected += ()=>KillAllGames;
         }
         
         public static async Task KillAllGames()

@@ -15,9 +15,9 @@ namespace Logic
 {
     public class SystemManager
     {
-        public static event Action OnSensorFound = DefaultOnSensorFound; //delegate { };
+        public static event Action OnSensorFound = delegate { };
         public static event Action OnBeforeRelaunchApp = delegate { };
-
+        public static event Action OnScreenSaverDetected = delegate { };
         #region Fields
         private static bool isSensorActiveOnLaunch = false;
         private static bool isShowTaskbarOnExit = true;
@@ -27,7 +27,11 @@ namespace Logic
         static extern void mouse_event(Int32 dwFlags, Int32 dx, Int32 dy, Int32 dwData, UIntPtr dwExtraInfo);
         private const int MOUSEEVENTF_MOVE = 0x0001;
         #endregion
-
+        static SystemManager()
+        {
+            OnSensorFound += WakeMonitor;
+            //OnScreenSaverDetected += async () => GameManager.KillAllGames().RunParallel();
+        }
         #region Properties
         public static bool isRelaunched { get; set; }
         #endregion
@@ -65,6 +69,8 @@ namespace Logic
             Ex.Log($"isRelaunched={isRelaunched}");
             Ex.Log($"isShowTaskbarOnExit={isShowTaskbarOnExit}");
             SetRegDisableSwipeEdgeMachine();
+            OnScreenSaverDetected += async () => await GameManager.KillAllGames();
+            CheckScreenSaver().RunParallel();
         }
         public static void OnWindowClosed()
         {
@@ -83,9 +89,26 @@ namespace Logic
             catch { }
             Environment.Exit(0);
         }
-        public static void CheckInactive()
+        public static async Task CheckScreenSaver()
         {
-
+            bool isScreensaverRuning;
+            bool isDoneOnce = false;
+            while (true)
+            {
+                isScreensaverRuning = ScreenSaverController.GetScreenSaverRunning();
+                if(!isScreensaverRuning)
+                {
+                    isDoneOnce = false;
+                }
+                if (isScreensaverRuning && !isDoneOnce)
+                {
+                    OnScreenSaverDetected();
+                    isDoneOnce = true;
+                    await Task.Delay(50000);
+                }
+                await Task.Delay(2000);
+            }
+            Ex.Log("CheckScreenSaver() while(true) finished.");
         }
 
         public static async void RelaunchApp()
@@ -103,7 +126,7 @@ namespace Logic
         }
         public static void WakeMonitor()
         {
-            Ex.Log("Wake Monitor");
+            //Ex.Log("Wake Monitor");
             WakeUpScreenSaver();
             //MouseMove();            
         }
@@ -264,7 +287,7 @@ namespace Logic
         {
             if (ScreenSaverController.GetScreenSaverRunning())
             {
-                Ex.Log("GetScreenSaverRunning==true");
+                Ex.Log("WakeUpScreenSaver() ScreenSaverRunning==true");
                 ScreenSaverController.KillScreenSaver();
             }
         }
@@ -273,11 +296,6 @@ namespace Logic
         {
             Ex.Log("Try to wake up (move mouse)");
             mouse_event(MOUSEEVENTF_MOVE, 40, 0, 0, UIntPtr.Zero);
-        }
-
-        private static void DefaultOnSensorFound()
-        {
-            WakeMonitor();
         }
         #endregion
     }
