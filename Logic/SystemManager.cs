@@ -156,15 +156,15 @@ namespace Logic
                 //bool isFound = boolTest; //TEST
                 if (isFound)
                 {
-                    if (count < 3) { Ex.Log("сенсор найден"); }
+                    if (count < 3) { Ex.Log("Task CheckSensor(): сенсор найден"); }
                     if (count < 5) { count++; }
                     if (isTaskComplete)
                     {
-                        OnSensorFound();
-                        Ex.Log("сенсор подключился");
+                        Ex.Log("Task CheckSensor(): сенсор подключился");
+                        OnSensorFound();                        
                         CancellationToken token = cancelTokenSource.Token;
                         checking = CheckBrowser(token);
-                        Ex.Log($"cheking browser task status={checking.Status}({checking.IsCompleted})");
+                        Ex.Log($"Task CheckSensor(): Task CheckBrowser IsCompleted={checking.IsCompleted}; Status={checking.Status}");
                     }
                 }
                 else
@@ -174,11 +174,13 @@ namespace Logic
                     cancelTokenSource = null;
                 }
             }
+            Ex.Log("Task CheckSensor(): while(true) finished");
         }
 
         public static async Task CheckBrowser(CancellationToken token)
         {
             bool isWork = true;
+            Ex.Log("Task CheckBrowser: запущен.");
             while (isWork)
             {
                 KillBrowser();
@@ -186,11 +188,11 @@ namespace Logic
                 //Ex.Log($"token.IsCancellationRequested={token.IsCancellationRequested}");
                 if (token.IsCancellationRequested)
                 {
-                    Ex.Log("получен токен отмены");
+                    Ex.Log("Task CheckBrowser: получен токен отмены");
                     isWork = false;
                 }
             }
-            Ex.Log("закончился таск чекбраузер");
+            Ex.Log("Task CheckBrowser: закончился.");
         }
 
         public static void KillBrowser()

@@ -78,11 +78,12 @@ namespace WPF
 
         private void SetBackground()
         {
-            Ex.Log("SetBackground() called");
+            Ex.Log("SetBackground(): called");
             try
             {
                 if (File.Exists("background.png"))
                 {
+                    Ex.Log("SetBackground(): background.png exists (найден).");
                     ImageBrush myBrush = new ImageBrush();
                     var img = new BitmapImage(new Uri("background.png", UriKind.Relative));
                     try
@@ -95,6 +96,10 @@ namespace WPF
                     {
                         ex.Log("SetBackground()");
                     }
+                }
+                else
+                {
+                    Ex.Log("SetBackground(): background.png not found.");
                 }
             }
             catch (Exception ex)
@@ -159,7 +164,7 @@ namespace WPF
         }
         private void ReloadGrid()
         {
-            Ex.Log("ReloadGrid() called. перезапуск ячеек интерфейса");
+            Ex.Log("ReloadGrid(): called.");
             ClearGrid();
             FillGrid();
         }
@@ -349,7 +354,7 @@ namespace WPF
 
         private void DisableUI()
         {
-            Ex.Log("Disable UI");
+            Ex.Log("DisableUI(): called.");
             gamesGrid.IsEnabled = false;
             label1.Content = "Пожалуйста подождите / Please Wait";
         }
