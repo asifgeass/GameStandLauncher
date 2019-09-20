@@ -54,6 +54,7 @@ namespace Logic
             {
                 Ex.Try(() => item.Kill());
             }
+            await Task.Yield();
         }
         static async Task SetFokus(ProcessSD proc)
         {
@@ -83,7 +84,7 @@ namespace Logic
                 var getApps = ProcessSD.GetProcesses().Where(x => x.MainWindowTitle != "" && !x.ProcessName.Contains("GameStand") && !x.ProcessName.Contains("devenv") && !x.ProcessName.Contains("explorer") && !x.ProcessName.Contains("TeamViewer")).ToArray();
                 Ex.Log($"Processes count={getApps?.Length};");
                 processLaunched = processLaunched ?? getApps.FirstOrDefault();
-                SetFokus(processLaunched);
+                SetFokus(processLaunched).RunParallel();
                 Ex.Log($"Process Launched = {processLaunched.MainWindowTitle}({processLaunched.ProcessName});");
                 //Ex.Log($"Process Launched={_PathGame}");
                 //overlay.Start(processLaunched);
@@ -107,6 +108,7 @@ namespace Logic
                     }
                 }                
             });
+            await Task.Yield(); //Just for remove warning
         }
 
         public static void KillGame(System.Diagnostics.Process incProcess)
@@ -272,6 +274,7 @@ namespace Logic
                 catch (Exception ex)
                 {
                     icon = IconFromFilePath(incPath);
+                    ex.Log();
                 }             
                 Icon[] splitIcons = IconUtil.Split(icon); //icon0
                 Icon biggestIcon = splitIcons[0];
@@ -308,7 +311,7 @@ namespace Logic
         public static void TestRunOverlay(string incPath)
         {
             var processLaunched = ProcessSD.Start(incPath);
-            KillAllGames();
+            KillAllGames().RunParallel();
             var overlay = new OverlayLauncher();
             overlay.Start(processLaunched);
         }
