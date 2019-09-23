@@ -24,33 +24,31 @@ namespace WPF
 
         }
 
-        public MainWindow(bool relaunched):base()
+        public MainWindow(bool re1param):base()
         {
             InitializeComponent();
-            SystemManager.isRelaunched = false;
+            SystemManager.isRe1ParamExist = false;
 #if DEBUG
             WindowState = WindowState.Normal;
 #else
             WindowState = WindowState.Maximized;
 #endif
-            SystemManager.isRelaunched = relaunched;
-            Ex.Log($"argumented ctor isRelaunched={SystemManager.isRelaunched}");
+            SystemManager.isRe1ParamExist = re1param;
+            Ex.Log($"argumented ctor isRelaunched={SystemManager.isRe1ParamExist}");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            SystemManager.OnWindowLoaded();
+        {            
             ReloadGrid();
+            SystemManager.OnWindowLoaded();
             SetEventSubscribes();
             SetBackground();
             SetHeadline();            
         }
-
         private void SetEventSubscribes()
         {
             SystemManager.OnBeforeRelaunchApp += DisableUI;
         }
-
         private async void button1_Click(object sender, RoutedEventArgs e)
         {
             //===TEST BUTTON===
@@ -115,7 +113,7 @@ namespace WPF
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            ReloadGrid();
+            //ReloadGrid();
         }
         private void TestImageControl()
         {

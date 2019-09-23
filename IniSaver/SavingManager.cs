@@ -8,7 +8,8 @@ using System.IO;
 
 public enum Setting
 {
-    HeadlineLauncherText
+    HeadlineLauncherText,
+    DisableSwipeWarning
 }
 
 public enum Where
@@ -31,8 +32,9 @@ public class SavingManager
     #region default settings
     private static Dictionary<Setting, string> defaultSets = new Dictionary<Setting, string>
         {
-        [Setting.HeadlineLauncherText] = " "
-        };
+        [Setting.HeadlineLauncherText] = " ",
+        [Setting.DisableSwipeWarning] = "0"
+    };
     #endregion
     #region Constructor
     public SavingManager() //user

@@ -17,19 +17,19 @@ namespace WPF
         {
             // Application is running
             // Process command line args
-            bool isRelaunched = false;
-            Ex.Log($"args count={e.Args.Length}");
+            bool isRe1Param = false;
+            Ex.Log($"App.cs: args count={e.Args.Length}");
             for (int i = 0; i != e.Args.Length; ++i)
             {
-                Ex.Log($"arg={e.Args[i]};");
+                Ex.Log($"App.cs: arg={e.Args[i]};");
                 if (e.Args[i].Contains("re1"))
                 {
-                    Ex.Log($"arg re1 found");
-                    isRelaunched = true;                    
+                    Ex.Log($"App.cs: arg re1 found");
+                    isRe1Param = true;                    
                 }
             }
 
-            MainWindow mainWindow = new MainWindow(isRelaunched);
+            MainWindow mainWindow = new MainWindow(isRe1Param);
             //mainWindow.WindowState = WindowState.Maximized;
             mainWindow.Show();            
         }

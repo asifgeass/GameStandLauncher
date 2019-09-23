@@ -13,6 +13,7 @@ namespace Logic
         private static bool isLocalMachine = false;
         public static readonly string RegSwipeEdge = @"SOFTWARE\Policies\Microsoft\Windows\EdgeUI";
         public static readonly string swipeRegValue = "AllowEdgeSwipe";
+        public static bool isDisabledSwipes { get; set; } = false;
         private static string LastDelete(string path)
         {
             int index = path.LastIndexOf('\\');
@@ -31,6 +32,33 @@ namespace Logic
             }
             return CreateReg(path);
         }
+        private static void ReadSwipeEdgeReg()
+        {
+            try
+            {
+                ReadSwipeEdgeMachine();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        public  static void ReadSwipeEdgeMachine()
+        {
+            isDisabledSwipes = false;
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(RegSwipeEdge);
+
+            if (key == null)
+            { return; }
+
+            string data = key.GetValue(swipeRegValue)?.ToString();
+            key.Close();
+
+            if (data == null)
+            { return; }
+
+            isDisabledSwipes = data == "0";
+        }
         private static RegistryKey CreateReg(string path)
         {
             RegistryKey key = isLocalMachine ?
@@ -48,7 +76,10 @@ namespace Logic
         }
         private static string RecursFindExist(string path)
         {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
+            RegistryKey key = isLocalMachine ?
+                Registry.LocalMachine.OpenSubKey(path, true)
+                : Registry.CurrentUser.OpenSubKey(path, true);
+            //RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
             if (key == null)
             {
                 path = LastDelete(path);

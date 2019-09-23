@@ -18,6 +18,7 @@ namespace Logic
         public static event Action OnSensorFound = delegate { };
         public static event Action OnBeforeRelaunchApp = delegate { };
         public static event Action OnScreenSaverDetected = delegate { };
+        public static event Action OnSwipesEnabledWarning = delegate { };
         #region Fields
         private static bool isSensorActiveOnLaunch = false;
         private static bool isShowTaskbarOnExit = true;
@@ -33,7 +34,7 @@ namespace Logic
             //OnScreenSaverDetected += async () => GameManager.KillAllGames().RunParallel();
         }
         #region Properties
-        public static bool isRelaunched { get; set; }
+        public static bool isRe1ParamExist { get; set; }
         #endregion
 
         #region Public Methods
@@ -66,11 +67,29 @@ namespace Logic
             }
             catch (Exception ex)
             { ex.Log("Попытка отключить стилус"); }
-            Ex.Log($"isRelaunched={isRelaunched}");
+            Ex.Log($"isRelaunched={isRe1ParamExist}");
             Ex.Log($"isShowTaskbarOnExit={isShowTaskbarOnExit}");
             SetRegDisableSwipeEdgeMachine();
             OnScreenSaverDetected += async () => await GameManager.KillAllGames();
             CheckScreenSaver().RunParallel();
+            WarningSwipe();
+        }
+
+        private static void WarningSwipe()
+        {
+            StringBuilder msg = new StringBuilder("ВНИМАНИЕ! Не отключены свайпы границ экрана в Windows, что нарушает безопасность.\n\n");
+            msg.AppendLine("Воспользуйтесь TuningGameStand.exe от имени администратора для отключения свайпов.\n");
+            msg.AppendLine("Для отключения этого сообщения (не рекомендуется) в файле settings.ini выставьте параметр DisableSwipeWarning=1.\n");
+            OnSwipesEnabledWarning += () => Ex.Show(msg.ToString());
+
+            RegPath.ReadSwipeEdgeMachine();
+            var set = new SavingManager(Where.local);
+            bool isForceDisable = set.Key(Setting.DisableSwipeWarning).ValueBool;
+            set.Save();
+            if (RegPath.isDisabledSwipes==false && isForceDisable==false)
+            {
+                OnSwipesEnabledWarning();
+            }
         }
         public static void OnWindowClosed()
         {
@@ -104,7 +123,7 @@ namespace Logic
                 {
                     OnScreenSaverDetected();
                     isDoneOnce = true;
-                    await Task.Delay(50000);
+                    await Task.Delay(30000);
                 }
                 await Task.Delay(2000);
             }
@@ -113,12 +132,13 @@ namespace Logic
 
         public static async void RelaunchApp()
         {
-            if (isRelaunched == false)
+            if (isRe1ParamExist == false) //Change/reverse relaunch logic HERE. false: relaunch without param
             {
                 OnBeforeRelaunchApp();
                 var path = Application.ResourceAssembly.Location;
-                Ex.Log($"рестарт программы={path}");
-                System.Diagnostics.Process.Start(path, "re1");
+                Ex.Log($"RelaunchApp(): рестарт программы={path}");
+                System.Diagnostics.Process.Start(path, "re1"); //if (isRe1ParamExist == false)
+                //System.Diagnostics.Process.Start(path); //if (isRe1ParamExist == true)
                 isShowTaskbarOnExit = false;
                 await Task.Delay(1500);
                 Application.Current.Shutdown();

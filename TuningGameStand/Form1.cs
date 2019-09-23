@@ -5,10 +5,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Logic;
 
 namespace TuningGameStand
 {
@@ -25,8 +25,7 @@ namespace TuningGameStand
         public Form1()
         {
             InitializeComponent();
-            AppPath = Application.ExecutablePath.Replace(SettingsAppName, AppName);
-            ReadRegistry();
+            AppPath = Application.ExecutablePath.Replace(SettingsAppName, AppName);            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -72,7 +71,6 @@ namespace TuningGameStand
         {
             try
             {
-                ReadSwipeEdgeUser();
                 ReadSwipeEdgeMachine();
             }
             catch (Exception ex)
@@ -84,39 +82,24 @@ namespace TuningGameStand
 
         private void ReadSwipeEdgeMachine()
         {
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(RegSwipeEdge, true);
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(RegSwipeEdge);
+            checkBoxSwipeEdgeMachine.Checked = false;
 
             if (key == null)
-            { checkBoxSwipeEdgeUser.Checked = false; return; }
-
-            string data = key.GetValue("AllowEdgeSwipe")?.ToString();
-            key.Close();
-
-            if (data == null)
-            { checkBoxSwipeEdgeUser.Checked = false; return; }
-
-            checkBoxAutoStart.Checked = data == "0";
-        }
-
-        private void ReadSwipeEdgeUser()
-        {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(RegSwipeEdge, true);
-
-            if (key == null)
-            { checkBoxSwipeEdgeUser.Checked = false; return; }
+            { return; }
 
             string data = key.GetValue(swipeRegValue)?.ToString();
             key.Close();
 
             if (data == null)
-            { checkBoxSwipeEdgeUser.Checked = false; return; }
+            { return; }
 
-            checkBoxAutoStart.Checked = data == "0";
+            checkBoxSwipeEdgeMachine.Checked = data == "0";
         }
 
         private void ReadAutostartReg()
         {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(RegAutostart, true);
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(RegAutostart);
             if (key == null)
             {
                 checkBoxAutoStart.Checked = false;
@@ -161,20 +144,6 @@ namespace TuningGameStand
                 Show(ex.Message);
             }
         }
-
-        private void checkBoxSwipeEdgeUser_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                SetRegDisableSwipeEdgeUser(checkBoxSwipeEdgeUser.Checked);
-            }
-            catch (Exception ex)
-            {
-                Show(ex.Message);                
-            }
-            
-        }
-
         private void SetRegDisableSwipeEdgeUser(bool isChecked)
         {
             RegistryKey key = RegPath.GetCreatePath(RegSwipeEdge);
@@ -195,8 +164,14 @@ namespace TuningGameStand
             {
                 SetRegDisableSwipeEdgeMachine(checkBoxSwipeEdgeMachine.Checked);
             }
+            catch (SecurityException ex1)
+            {
+                checkBoxSwipeEdgeMachine.Checked = !checkBoxSwipeEdgeMachine.Checked;
+                Show(ex1.Message+"\n\nЗапустите от имени администратора для изменения реестра.");
+            }
             catch (Exception ex)
             {
+                checkBoxSwipeEdgeMachine.Checked = !checkBoxSwipeEdgeMachine.Checked;
                 Show(ex.Message);
             }            
         }
@@ -213,6 +188,11 @@ namespace TuningGameStand
                 key.DeleteValue(swipeRegValue);
             }
             key.Close();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            ReadRegistry();
         }
     }
 }

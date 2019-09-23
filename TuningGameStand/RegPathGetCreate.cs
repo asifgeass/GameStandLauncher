@@ -36,7 +36,7 @@ namespace TuningGameStand
                 : Registry.CurrentUser.OpenSubKey(path, true);
             if(key==null)
             {
-                Ex.Throw($"Не удалось получить ключ реестра:\n{path}.");
+                throw new Exception($"Не удалось получить ключ реестра:\n{path}.");
             }
             foreach (var item in SubKeys)
             {
@@ -46,7 +46,10 @@ namespace TuningGameStand
         }
         private static string RecursFindExist(string path)
         {
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
+            RegistryKey key = isLocalMachine ?
+                Registry.LocalMachine.OpenSubKey(path, true)
+                : Registry.CurrentUser.OpenSubKey(path, true);
+            //RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
             if (key == null)
             {
                 path = LastDelete(path);

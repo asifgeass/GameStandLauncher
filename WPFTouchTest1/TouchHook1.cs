@@ -7,6 +7,7 @@ using TouchHook;
 
 namespace Logic
 {
+    //==From Logic Ctrl+X==
     class TouchHook1
     {
         public static void test()

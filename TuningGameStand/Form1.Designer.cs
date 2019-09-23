@@ -38,7 +38,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.checkBoxSwipeEdgeMachine = new System.Windows.Forms.CheckBox();
-            this.checkBoxSwipeEdgeUser = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -128,7 +127,6 @@
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.checkBoxSwipeEdgeMachine);
-            this.panel3.Controls.Add(this.checkBoxSwipeEdgeUser);
             this.panel3.Controls.Add(this.label4);
             this.panel3.Location = new System.Drawing.Point(9, 189);
             this.panel3.Name = "panel3";
@@ -138,24 +136,13 @@
             // checkBoxSwipeEdgeMachine
             // 
             this.checkBoxSwipeEdgeMachine.AutoSize = true;
-            this.checkBoxSwipeEdgeMachine.Location = new System.Drawing.Point(115, 23);
+            this.checkBoxSwipeEdgeMachine.Location = new System.Drawing.Point(10, 23);
             this.checkBoxSwipeEdgeMachine.Name = "checkBoxSwipeEdgeMachine";
             this.checkBoxSwipeEdgeMachine.Size = new System.Drawing.Size(99, 17);
             this.checkBoxSwipeEdgeMachine.TabIndex = 2;
             this.checkBoxSwipeEdgeMachine.Text = "Local_Machine";
             this.checkBoxSwipeEdgeMachine.UseVisualStyleBackColor = true;
             this.checkBoxSwipeEdgeMachine.Click += new System.EventHandler(this.checkBoxSwipeEdgeMachine_Click);
-            // 
-            // checkBoxSwipeEdgeUser
-            // 
-            this.checkBoxSwipeEdgeUser.AutoSize = true;
-            this.checkBoxSwipeEdgeUser.Location = new System.Drawing.Point(9, 23);
-            this.checkBoxSwipeEdgeUser.Name = "checkBoxSwipeEdgeUser";
-            this.checkBoxSwipeEdgeUser.Size = new System.Drawing.Size(88, 17);
-            this.checkBoxSwipeEdgeUser.TabIndex = 1;
-            this.checkBoxSwipeEdgeUser.Text = "Current_User";
-            this.checkBoxSwipeEdgeUser.UseVisualStyleBackColor = true;
-            this.checkBoxSwipeEdgeUser.Click += new System.EventHandler(this.checkBoxSwipeEdgeUser_Click);
             // 
             // label4
             // 
@@ -196,6 +183,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -219,7 +207,6 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.CheckBox checkBoxSwipeEdgeMachine;
-        private System.Windows.Forms.CheckBox checkBoxSwipeEdgeUser;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
