@@ -18,6 +18,14 @@
 
     </Window.Resources>
 
+    <!--<Window.InputBindings>
+        <KeyBinding Command="ApplicationCommands.Open"
+       Gesture="CTRL+R" />
+    </Window.InputBindings>-->
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding SomeCommand}" Gesture="F5"/>
+    </Window.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="15*"/>

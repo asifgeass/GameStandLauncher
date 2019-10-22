@@ -38,7 +38,7 @@ namespace Logic
         #endregion
 
         #region Public Methods
-        public static void OnWindowLoaded()
+        public static async void OnWindowLoaded()
         {
             Ex.Catch("Попытка скрыть панель задач", () =>
             {
@@ -172,7 +172,7 @@ namespace Logic
                 cancelTokenSource = cancelTokenSource ?? new CancellationTokenSource();
                 bool isTaskComplete = checking.IsCompleted;
                 //Ex.Log($"isTaskComplete={checking.Status}({checking.IsCompleted})");
-                bool isFound = DeviceManagerApi.IsSensorExist();
+                bool isFound = await DeviceManagerApi.IsSensorExist();
                 //bool isFound = boolTest; //TEST
                 if (isFound)
                 {

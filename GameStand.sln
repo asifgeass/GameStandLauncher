@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28306.52
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29409.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj", "{C325DF0E-4D5F-4916-AF05-FC1A82318CA1}"
 EndProject
@@ -12,8 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IconExtractor", "#adds\IconExtractor_src\IconExtractor\IconExtractor.csproj", "{FDFD4EEB-C202-4D93-A6E9-D8984A12D014}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuningGameStand", "TuningGameStand\TuningGameStand.csproj", "{D8620314-7A74-4086-9248-262AB03D4E41}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Overlay.NET", "#adds\Overlay.NET-master\Overlay.NET-master\src\Overlay.NET\Overlay.NET.csproj", "{2D411EA5-BC00-4630-B25E-43C554323E72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlobalTouchDemo", "GlobalTouchDemo\GlobalTouchDemo.csproj", "{BDFFBF13-DFB3-4253-BA53-D70406802F4D}"
 EndProject
@@ -58,9 +56,6 @@ Global
 		{D8620314-7A74-4086-9248-262AB03D4E41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D8620314-7A74-4086-9248-262AB03D4E41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8620314-7A74-4086-9248-262AB03D4E41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D411EA5-BC00-4630-B25E-43C554323E72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D411EA5-BC00-4630-B25E-43C554323E72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D411EA5-BC00-4630-B25E-43C554323E72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDFFBF13-DFB3-4253-BA53-D70406802F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BDFFBF13-DFB3-4253-BA53-D70406802F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDFFBF13-DFB3-4253-BA53-D70406802F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU

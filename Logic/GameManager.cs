@@ -93,12 +93,12 @@ namespace Logic
                 while(isRun)
                 {
                     await Task.Delay(2000);
-                    bool isFound = DeviceManagerApi.IsSensorExist();
+                    bool isFound = await DeviceManagerApi.IsSensorExist();
                     if(!isFound)
                     {
                         Ex.Log("Сенсор отключился 1");
                         await Task.Delay(60000);
-                        bool isFoundAfterTime = DeviceManagerApi.IsSensorExist();
+                        bool isFoundAfterTime = await DeviceManagerApi.IsSensorExist();
                         if(!isFoundAfterTime)
                         {
                             //KillGame(processLaunched);
@@ -313,8 +313,8 @@ namespace Logic
         {
             var processLaunched = ProcessSD.Start(incPath);
             KillAllGames().RunParallel();
-            var overlay = new OverlayLauncher();
-            overlay.Start(processLaunched);
+            //var overlay = new OverlayLauncher();
+            //overlay.Start(processLaunched);
         }
     }
 }

@@ -89,12 +89,7 @@
     <Compile Include="ExtensionsOld.cs" />
     <Compile Include="Helpers\HexString.cs" />
     <Compile Include="Helpers\RegPath.cs" />
-    <Compile Include="MouseHookFolder\MouseHookAdapter.cs" />
-    <Compile Include="MouseHookFolder\MouseHook.cs" />
-    <Compile Include="MouseHookFolder\Win32Api.cs" />
-    <Compile Include="OverlayFolder\OverlayLauncher.cs" />
-    <Compile Include="OverlayFolder\OverlaySettings.cs" />
-    <Compile Include="OverlayFolder\OverlayLayer.cs" />
+    <Compile Include="Hotkeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -123,10 +118,6 @@
       <Project>{FDFD4EEB-C202-4D93-A6E9-D8984A12D014}</Project>
       <Name>IconExtractor</Name>
     </ProjectReference>
-    <ProjectReference Include="..\#adds\Overlay.NET-master\Overlay.NET-master\src\Overlay.NET\Overlay.NET.csproj">
-      <Project>{2d411ea5-bc00-4630-b25e-43c554323e72}</Project>
-      <Name>Overlay.NET</Name>
-    </ProjectReference>
     <ProjectReference Include="..\IniSaver\IniSaver.csproj">
       <Project>{8fd63c6d-1c07-455f-84ff-cfa1c5c33985}</Project>
       <Name>IniSaver</Name>
@@ -138,9 +129,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TouchHook1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -19,24 +19,23 @@ namespace WPF
         //bool isShowTaskbarOnExit = true;
         //readonly bool isRelaunched;
         bool isClickable = true;
+        private ICommand someCommand;
         public MainWindow()
-        {            
-
-        }
-
-        public MainWindow(bool re1param):base()
         {
             InitializeComponent();
-            SystemManager.isRe1ParamExist = false;
+            DataContext = this;
 #if DEBUG
             WindowState = WindowState.Normal;
 #else
             WindowState = WindowState.Maximized;
 #endif
+            SystemManager.isRe1ParamExist = false;
+        }
+        public MainWindow(bool re1param):this()
+        {
             SystemManager.isRe1ParamExist = re1param;
             Ex.Log($"argumented ctor isRelaunched={SystemManager.isRe1ParamExist}");
         }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {            
             ReloadGrid();
@@ -44,6 +43,18 @@ namespace WPF
             SetEventSubscribes();
             SetBackground();
             SetHeadline();            
+        }
+        public ICommand SomeCommand
+        {
+            get
+            {
+                return someCommand
+                    ?? (someCommand = new ActionCommand(() =>
+                    {
+                        var form = new InfoWindow();
+                        form.Show();
+                    }));
+            }
         }
         private void SetEventSubscribes()
         {
@@ -180,7 +191,7 @@ namespace WPF
                     await Task.Delay(interval * 1000);
                     var top = rnd.Next(5, 30);
                     var left = rnd.Next(5, 40);
-                    var animationTime = rnd.Next(3, 10);
+                    var animationTime = rnd.Next(5, 15);
                     var leftRight = rnd.Next(1, 3);
                     int right = leftRight == 1 ? 0 : left;
                     left = right == 0 ? left : 0;
