@@ -12,6 +12,8 @@ using System.Threading;
 using System.Threading.Tasks.Schedulers;
 using System.Reflection;
 using Logic;
+using System.Security;
+using System.Runtime.Serialization;
 
 public static class Ex
 {
@@ -210,7 +212,7 @@ public static async Task<bool> TryAsync(Action func, string msg = null)
     public static void Throw(string msg)
     {
         logger.Error("throw " + msg);
-        throw new Exception(msg);
+        throw new CustException(msg);
     }
 
     public static void Throw(this Exception ex)
@@ -221,7 +223,7 @@ public static async Task<bool> TryAsync(Action func, string msg = null)
     public static void Throw(this Exception ex, string msg)
     {
         logger.ErrorStack(ex, "throw " + msg + n + ex.Message);
-        throw new Exception(msg+n+ ex.Message +n, ex);
+        throw new CustException(msg+n+ ex.Message +n, ex);
     }
     public static void Show(this Exception ex, string msg = null)
         {
@@ -448,5 +450,21 @@ public static async Task<bool> TryAsync(Action func, string msg = null)
         return result;
     }
     #endregion
+}
+
+public class CustException : Exception
+{
+    public CustException() : base()
+    { }
+
+    public CustException(string message) : base(message)
+    { }
+
+    public CustException(string message, Exception innerException):base(message,innerException)
+    { }
+
+    [SecuritySafeCritical]
+    protected CustException(SerializationInfo info, StreamingContext context):base(info, context)
+    { }
 }
 

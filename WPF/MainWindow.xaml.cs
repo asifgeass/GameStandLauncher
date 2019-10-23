@@ -143,12 +143,20 @@ namespace WPF
             try
             {
                 var realExePath = GameManager.GetShortcutTarget(incPathGame);
-                imgControl.Source = imageSource ?? (realExePath == null ? Properties.Resources.game2.ToImageSource() : GameManager.GetHighResIcon(realExePath).ToImageSource() );
+                if(realExePath!=null && !File.Exists(realExePath))
+                {
+                    Ex.Throw($"Ярлык {incPathGame} ссылается на несуществующий файл {realExePath};\nMainWindow.ImageCreateGameIcon()");
+                }
+                imgControl.Source = imageSource ?? 
+                    (realExePath == null ? Properties.Resources.game2.ToImageSource() 
+                    : GameManager.GetHighResIcon(realExePath).ToImageSource() );
             }
+            catch(CustException excust)
+            { excust.Throw(); }
             catch(Exception ex)
             {
-                ex.Log($"Error at ImageCreateGameIcon(string incPathGame={incPathGame})\n{ex.Message}");
-                Show($"Ошибка с ярлыком {incPathGame};\n\n{ex.Message}\n\n MainWindow.ImageCreateGameIcon()");
+                ex.Throw($"Error incPathGame={incPathGame}\n{ex.Message}\nMainWindow.ImageCreateGameIcon()");
+                //Show($"Ошибка с ярлыком {incPathGame};\n\n{ex.Message}\n\n MainWindow.ImageCreateGameIcon()");
             }
             imgControl.HorizontalAlignment = HorizontalAlignment.Stretch;
             imgControl.VerticalAlignment = VerticalAlignment.Stretch;
@@ -180,84 +188,96 @@ namespace WPF
         private void CreateFilledCell(int i, int j, string content)
         {
             var grid = new gridCellUser();
-
-            Image imgControl = ImageCreateGameIcon(content);
-            imgControl.Loaded += async (s, e) =>
+            try
             {
-                var rnd = new Random(i * 10 + j);
-                while (true)
+                Image imgControl = ImageCreateGameIcon(content);
+                imgControl.Loaded += async (s, e) =>
                 {
-                    var interval = rnd.Next(5, 30);
-                    await Task.Delay(interval * 1000);
-                    var top = rnd.Next(5, 30);
-                    var left = rnd.Next(5, 40);
-                    var animationTime = rnd.Next(5, 15);
-                    var leftRight = rnd.Next(1, 3);
-                    int right = leftRight == 1 ? 0 : left;
-                    left = right == 0 ? left : 0;
-                    ThicknessAnimation anim = RandomMarginAnimation(left, top, right, animationTime * 100);
-                    //Timeline.SetDesiredFrameRate(anim, 30); // 60 FPS
-                    imgControl.BeginAnimation(MarginProperty, anim);
-                }
-            };
-            Grid.SetRow(imgControl, 0);
+                    var rnd = new Random(i * 100 + j);
+                    while (true)
+                    { await SetAnimation(imgControl, rnd); }
+                };
+                Grid.SetRow(imgControl, 0);
 
-            var lblControl = LabelCreateGameName(content);
-            Grid.SetRow(lblControl, 2);
+                var lblControl = LabelCreateGameName(content);
+                Grid.SetRow(lblControl, 2);
 
-            grid.contentGrid.Children.Add(imgControl);
-            grid.contentGrid.Children.Add(lblControl);
+                grid.contentGrid.Children.Add(imgControl);
+                grid.contentGrid.Children.Add(lblControl);
 
-            ThicknessAnimation marginAnimation = MarginAnimation();
-            DoubleAnimation fontAnimation = FontAnimation();
+                ThicknessAnimation marginAnimation = MarginAnimation();
+                DoubleAnimation fontAnimation = FontAnimation();
 
-            grid.contentGrid.MouseDown += async (o, e) =>
+                grid.contentGrid.MouseDown += async (o, e) =>
+                {
+                    if (isClickable)
+                    {
+                        isClickable = false;
+                        var task = GameManager.RunGame(content);
+                        grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
+                        lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
+                        try
+                        {
+                            await task;
+                            await Task.Delay(1000);
+                            isClickable = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            Show(ex.Message);
+                            isClickable = true;
+                        }
+                    }
+                };
+                grid.contentGrid.TouchDown += async (o, e) =>
+                {
+                    if (isClickable)
+                    {
+                        isClickable = false;
+                        var task = GameManager.RunGame(content);
+                        grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
+                        lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
+                        try
+                        {
+                            await task;
+                            await Task.Delay(1000);
+                            isClickable = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            Show(ex.Message);
+                            isClickable = true;
+                        }
+                    }
+                };
+
+                Grid.SetRow(grid, i);
+                Grid.SetColumn(grid, j);
+                gamesGrid.Children.Add(grid);
+            }
+            catch(CustException ex1)
+            { ex1.Throw(); }
+            catch (Exception ex)
             {
-                if (isClickable)
-                {
-                    isClickable = false;
-                    var task = GameManager.RunGame(content);
-                    grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
-                    lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
-                    try
-                    {
-                        await task;
-                        await Task.Delay(1000);
-                        isClickable = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Show(ex.Message);
-                        isClickable = true;
-                    }
-                }
-            };
-            grid.contentGrid.TouchDown += async (o, e) =>
-            {
-                if (isClickable)
-                {
-                    isClickable = false;
-                    var task = GameManager.RunGame(content);
-                    grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
-                    lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
-                    try
-                    {
-                        await task;
-                        await Task.Delay(1000);
-                        isClickable = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Show(ex.Message);
-                        isClickable = true;
-                    }
-                }
-            };
-
-            Grid.SetRow(grid, i);
-            Grid.SetColumn(grid, j);
-            gamesGrid.Children.Add(grid);
+                ex.Throw("MainWindow.CreateFilledCell()");
+            }
         }
+
+        private static async Task SetAnimation(Image imgControl, Random rnd)
+        {
+            var top = rnd.Next(5, 30);
+            var left = rnd.Next(5, 40);
+            var animationTime = rnd.Next(5, 12);
+            var leftRight = rnd.Next(1, 3);
+            int right = leftRight == 1 ? 0 : left;
+            left = right == 0 ? left : 0;
+            ThicknessAnimation anim = RandomMarginAnimation(left, top, right, animationTime * 100);
+            //Timeline.SetDesiredFrameRate(anim, 30); // 60 FPS
+            var interval = rnd.Next(7, 30);
+            await Task.Delay(interval * 1000);
+            imgControl.BeginAnimation(MarginProperty, anim, HandoffBehavior.Compose);
+        }
+
         private static ThicknessAnimation RandomMarginAnimation(double left, double top, double right, double length)
         {
             var animation = new ThicknessAnimation();
@@ -327,13 +347,19 @@ namespace WPF
                 for (int j = 0; j < 7; j++)
                 {
                     if (numGame >= listGames.Length)
-                    { break; }
-                    CreateFilledCell(i, j, listGames[numGame]);
-                    numGame++;
+                    { break; }                    
+                    try
+                    {
+                        CreateFilledCell(i, j, listGames[numGame++]);
+                    }
+                    catch(CustException ex1)
+                    { ex1.Log(); j--; }
+                    catch (Exception ex)
+                    {
+                        ex.Log(); j--;
+                    }
                 }
             }
-
-
         }
         private void ClearGrid()
         {
