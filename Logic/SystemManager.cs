@@ -50,9 +50,8 @@ namespace Logic
                 Taskbar.Hide();
 #endif
             });
-            
             Ex.Log("Taskbar.Hide() passed.");
-            isSensorActiveOnLaunch = DeviceManagerApi.IsSensorExist();
+            Task.Run( ()=>isSensorActiveOnLaunch = DeviceManagerApi.IsSensorExist().Result);
             GameManager.KillAllGames().RunParallel();
             CheckSensor().RunParallel();
             //mh = new MouseHookAdapter();
