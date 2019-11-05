@@ -23,7 +23,7 @@
        Gesture="CTRL+R" />
     </Window.InputBindings>-->
     <Window.InputBindings>
-        <KeyBinding Command="{Binding SomeCommand}" Gesture="F5"/>
+        <KeyBinding Command="{Binding SomeCommand}" Gesture="F1"/>
     </Window.InputBindings>
 
     <Grid>

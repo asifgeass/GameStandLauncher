@@ -20,10 +20,17 @@ namespace WPF
         //readonly bool isRelaunched;
         bool isClickable = true;
         private ICommand someCommand;
+        private Uri uriSoundClick = new Uri("/zapsplat_button_click_004.mp3", UriKind.Relative);
+        private MediaElement soundClick = new MediaElement();
+        
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
+            soundClick.UnloadedBehavior = MediaState.Manual;
+            soundClick.LoadedBehavior = MediaState.Manual;
+            soundClick.Source = uriSoundClick;
+            soundClick.Position = new TimeSpan(0,0,0);
 #if DEBUG
             WindowState = WindowState.Normal;
 #else
@@ -213,6 +220,8 @@ namespace WPF
                     if (isClickable)
                     {
                         isClickable = false;
+                        //soundClick.Position = new TimeSpan(0, 0, 0);
+                        //soundClick.Play();
                         var task = GameManager.RunGame(content);
                         grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
                         lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
@@ -234,6 +243,8 @@ namespace WPF
                     if (isClickable)
                     {
                         isClickable = false;
+                        //soundClick.Position = new TimeSpan(0, 0, 0);
+                        //soundClick.Play();
                         var task = GameManager.RunGame(content);
                         grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
                         lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);

@@ -139,5 +139,10 @@
   <ItemGroup>
     <None Include="Resources\gamecontroller-512.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="zapsplat_button_click_004.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
