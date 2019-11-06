@@ -184,7 +184,7 @@ namespace WPF
 
             //box.HorizontalContentAlignment = HorizontalAlignment.Center;
             //box.VerticalContentAlignment = VerticalAlignment.Top;
-            box.FontSize = 20;            
+            box.FontSize = 18;            
             box.FontFamily = new FontFamily("Arial");            
             return box;
         }
