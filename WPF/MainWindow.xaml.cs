@@ -1,6 +1,7 @@
 ﻿using Logic;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -144,6 +145,7 @@ namespace WPF
         private Image ImageCreateGameIcon(string incPathGame)
         {
             var imgControl = new Image();
+            imgControl.Tag = incPathGame;
             ImageSource imageSource = null;
             imageSource = GameManager.FindLocalImg(incPathGame);
 
@@ -198,11 +200,13 @@ namespace WPF
             try
             {
                 Image imgControl = ImageCreateGameIcon(content);
-                imgControl.Loaded += async (s, e) =>
+                
+                imgControl.Initialized += async (s, e) =>
                 {
+                    Trace.WriteLine($"{imgControl.Tag} Loaded;");
                     var rnd = new Random(i * 100 + j);
                     while (true)
-                    { await SetAnimation(imgControl, rnd); }
+                    { await SetAnimation(imgControl, rnd); Trace.WriteLine($"anim played {imgControl.Tag}"); }
                 };
                 Grid.SetRow(imgControl, 0);
 
@@ -284,9 +288,10 @@ namespace WPF
             left = right == 0 ? left : 0;
             ThicknessAnimation anim = RandomMarginAnimation(left, top, right, animationTime * 100);
             //Timeline.SetDesiredFrameRate(anim, 30); // 60 FPS
-            var interval = rnd.Next(7, 30);
-            await Task.Delay(interval * 1000);
+            int interval = rnd.Next(7, 45);
+            await Task.Delay(interval * 1000);            
             imgControl.BeginAnimation(MarginProperty, anim, HandoffBehavior.Compose);
+            Trace.WriteLine($"{imgControl.Tag} {interval}");
         }
 
         private static ThicknessAnimation RandomMarginAnimation(double left, double top, double right, double length)
