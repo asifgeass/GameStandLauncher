@@ -206,12 +206,12 @@ namespace WPF
 
         private void OnClickGame(string content, gridCellUser grid, TextBlock lblControl, ThicknessAnimation marginAnimation, DoubleAnimation fontAnimation)
         {
-            grid.Focusable = false;
+            this.Focusable = false;
             Task.Run(async () =>
             {
                 await Task.Delay(3000);
-                grid.Focusable = true;
                 isClickable = true;
+                this.Focusable = true;                
             }).RunParallel();
 
             if (isClickable)
