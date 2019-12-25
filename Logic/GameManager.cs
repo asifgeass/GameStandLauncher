@@ -66,7 +66,7 @@ namespace Logic
                     SetForegroundWindow(proc.MainWindowHandle);                    
                 }
                 catch{}
-                await Task.Delay(2000);
+                await Task.Delay(1000);
             }            
         }
         public static async Task RunGame(string _PathGame)
@@ -82,7 +82,7 @@ namespace Logic
                 //var overlay = new OverlayLauncher();
                 var processLaunched = ProcessSD.Start(_PathGame);
                 await Task.Delay(1000);
-                var getApps = ProcessSD.GetProcesses().Where(x => x.MainWindowTitle != "" && !x.ProcessName.Contains("GameStand") && !x.ProcessName.Contains("devenv") && !x.ProcessName.Contains("explorer") && !x.ProcessName.Contains("TeamViewer")).ToArray();
+                var getApps = ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !x.ProcessName.Contains("GameStand") && !x.ProcessName.Contains("devenv") && !x.ProcessName.Contains("explorer") && !x.ProcessName.Contains("TeamViewer")).ToArray();
                 Ex.Log($"Processes count={getApps?.Length};");
                 processLaunched = processLaunched ?? getApps.FirstOrDefault();
                 SetFokus(processLaunched).RunParallel();
