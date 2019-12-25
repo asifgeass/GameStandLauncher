@@ -190,6 +190,7 @@ namespace Logic
                         OnSensorFound();                        
                         CancellationToken token = cancelTokenSource.Token;
                         checking = CheckBrowser(token);
+                        await checking;
                         Ex.Log($"Task CheckSensor(): Task CheckBrowser IsCompleted={checking.IsCompleted}; Status={checking.Status}");
                     }
                 }
