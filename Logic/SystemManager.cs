@@ -15,24 +15,30 @@ namespace Logic
 {
     public class SystemManager
     {
+        #region events
         public static event Action OnSensorFound = delegate { };
         public static event Action OnBeforeRelaunchApp = delegate { };
         public static event Action OnScreenSaverDetected = delegate { };
         public static event Action OnSwipesEnabledWarning = delegate { };
+        #endregion
+
         #region Fields
         private static bool isSensorActiveOnLaunch = false;
         private static bool isShowTaskbarOnExit = true;
         #endregion
+
         #region DLLImport
         [DllImport("user32.dll")]
         static extern void mouse_event(Int32 dwFlags, Int32 dx, Int32 dy, Int32 dwData, UIntPtr dwExtraInfo);
         private const int MOUSEEVENTF_MOVE = 0x0001;
         #endregion
+
         static SystemManager()
         {
             OnSensorFound += WakeMonitor;
             //OnScreenSaverDetected += async () => GameManager.KillAllGames().RunParallel();
         }
+
         #region Properties
         public static bool isRe1ParamExist { get; set; }
         #endregion
