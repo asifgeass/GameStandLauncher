@@ -39,11 +39,7 @@ namespace WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {            
-            ReloadGrid();
-            SystemManager.OnWindowLoaded();
-            SetEventSubscribes();
-            SetBackground();
-            SetHeadline();            
+           
         }
         private void SetEventSubscribes()
         {
@@ -355,6 +351,15 @@ namespace WPF
             Ex.Log("DisableUI(): called.");
             gamesGrid.IsEnabled = false;
             label1.Content = "Пожалуйста подождите / Please Wait";
+        }
+
+        private void Window_Initialized(object sender, EventArgs e)
+        {
+            ReloadGrid();
+            SystemManager.OnWindowLoaded();
+            SetEventSubscribes();
+            SetBackground();
+            SetHeadline();
         }
     }
 }
