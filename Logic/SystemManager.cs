@@ -182,11 +182,11 @@ namespace Logic
                 //bool isFound = boolTest; //TEST
                 if (isFound)
                 {
-                    if (count < 3) { Ex.Log("Task CheckSensor(): сенсор найден"); }
+                    if (count < 3) { Ex.Log("Task CheckSensor(): Sensor Found"); }
                     if (count < 5) { count++; }
                     if (isTaskComplete)
                     {
-                        Ex.Log("Task CheckSensor(): сенсор подключился");
+                        Ex.Log("Task CheckSensor(): Sensor Connected");
                         OnSensorFound();                        
                         CancellationToken token = cancelTokenSource.Token;
                         checking = CheckBrowser(token);
@@ -207,24 +207,24 @@ namespace Logic
         public static async Task CheckBrowser(CancellationToken token)
         {
             bool isWork = true;
-            Ex.Log("Task CheckBrowser: запущен.");
+            Ex.Log("Task CheckBrowser: Started.");
             while (isWork)
             {
                 KillBrowser();
-                await Task.Delay(330);
+                await Task.Delay(600);
                 //Ex.Log($"token.IsCancellationRequested={token.IsCancellationRequested}");
                 if (token.IsCancellationRequested)
                 {
-                    Ex.Log("Task CheckBrowser: получен токен отмены");
+                    Ex.Log("Task CheckBrowser: Got Cancel Token");
                     isWork = false;
                 }
             }
-            Ex.Log("Task CheckBrowser: закончился.");
+            Ex.Log("Task CheckBrowser: Ended.");
         }
 
         public static void KillBrowser()
         {
-            var bunchProcesses = System.Diagnostics.Process.GetProcessesByName("chrome");//.Where(x => x.MainWindowTitle != "");
+            var bunchProcesses = System.Diagnostics.Process.GetProcessesByName("chrome");//.Where(x => x.MainWindowTitle != "");            
             Parallel.ForEach(bunchProcesses, item =>
             {
                 Ex.Try(false, () => item.Kill());
