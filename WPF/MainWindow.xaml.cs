@@ -196,53 +196,42 @@ namespace WPF
             ThicknessAnimation marginAnimation = MarginAnimation();
             DoubleAnimation fontAnimation = FontAnimation();
 
-            grid.contentGrid.MouseDown += async (o, e) =>
-            {
-                if (isClickable)
-                {
-                    isClickable = false;
-                    var task = GameManager.RunGame(content);
-                    grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
-                    lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
-                    try
-                    {
-                        await task;
-                        await Task.Delay(1000);
-                        isClickable = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Show(ex.Message);
-                        isClickable = true;
-                    }
-                }
-            };
-            grid.contentGrid.TouchDown += async (o, e) =>
-            {
-                if (isClickable)
-                {
-                    isClickable = false;
-                    var task = GameManager.RunGame(content);
-                    grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
-                    lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
-                    try
-                    {
-                        await task;
-                        await Task.Delay(1000);
-                        isClickable = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Show(ex.Message);
-                        isClickable = true;
-                    }
-                }
-            };
+            grid.contentGrid.MouseDown += async (o, e) => OnClickGame(content, grid, lblControl, marginAnimation, fontAnimation);
+            grid.contentGrid.TouchDown += async (o, e) => OnClickGame(content, grid, lblControl, marginAnimation, fontAnimation);
 
             Grid.SetRow(grid, i);
             Grid.SetColumn(grid, j);
             gamesGrid.Children.Add(grid);
         }
+
+        private void OnClickGame(string content, gridCellUser grid, TextBlock lblControl, ThicknessAnimation marginAnimation, DoubleAnimation fontAnimation)
+        {
+            grid.Focusable = false;
+            Task.Run(async () =>
+            {
+                await Task.Delay(3000);
+                grid.Focusable = true;
+                isClickable = true;
+            }).RunParallel();
+
+            if (isClickable)
+            {
+                isClickable = false;
+                try
+                {
+                    grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
+                    lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
+                    var task = GameManager.RunGame(content);
+                }
+                catch (Exception ex)
+                {
+                    Show(ex.Message);
+                    isClickable = true;
+                    grid.Focusable = true;
+                }
+            }
+        }
+
         private static ThicknessAnimation RandomMarginAnimation(double left, double top, double right, double length)
         {
             var animation = new ThicknessAnimation();
