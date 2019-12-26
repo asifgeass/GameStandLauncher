@@ -45,7 +45,7 @@ namespace Logic
                     }
                     catch { }
                 }
-                await Task.Delay(300);
+                await Task.Delay(600);
             }
         }
         public static async Task<SerialPort> FindPort()
