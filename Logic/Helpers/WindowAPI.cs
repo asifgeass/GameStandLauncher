@@ -13,6 +13,9 @@ namespace Logic.Helpers
         const int GWL_EXSTYLE = (-20);
 
         [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hwnd, int index);
 
         [DllImport("user32.dll")]

@@ -15,13 +15,12 @@ using Microsoft.Win32;
 using System.Reflection;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using Logic.Helpers;
 
 namespace Logic
 {
     public static class GameManager
     {
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
 
         private static readonly string processName = "GameStand";
         private static readonly string pathShortcuts = @"c:\work\shortcuts";
@@ -63,7 +62,7 @@ namespace Logic
             {
                 try
                 {
-                    SetForegroundWindow(proc.MainWindowHandle);                    
+                    WindowAPI.SetForegroundWindow(proc.MainWindowHandle);                    
                 }
                 catch{}
                 await Task.Delay(1000);
