@@ -80,14 +80,13 @@ namespace Logic
                 await KillAllGames();
                 //var overlay = new OverlayLauncher();
                 var processLaunched = ProcessSD.Start(_PathGame);
-                await Task.Delay(1000);
-                var getApps = ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !x.ProcessName.Contains("GameStand") && !x.ProcessName.Contains("devenv") && !x.ProcessName.Contains("explorer") && !x.ProcessName.Contains("TeamViewer")).ToArray();
-                Ex.Log($"Processes count={getApps?.Length};");
-                processLaunched = processLaunched ?? getApps.FirstOrDefault();
-                SetFokus(processLaunched).RunParallel();
-                Ex.Log($"Process Launched = {processLaunched.MainWindowTitle}({processLaunched.ProcessName});");
+                //await Task.Delay(1000);
+                //var getApps = ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !x.ProcessName.Contains("GameStand") && !x.ProcessName.Contains("devenv") && !x.ProcessName.Contains("explorer") && !x.ProcessName.Contains("TeamViewer")).ToArray();
+                //Ex.Log($"Processes count={getApps?.Length};");
+                //processLaunched = processLaunched ?? getApps.FirstOrDefault();
+                //SetFokus(processLaunched).RunParallel();
+                //Ex.Log($"Process Launched = {processLaunched.MainWindowTitle}({processLaunched.ProcessName});");
                 //Ex.Log($"Process Launched={_PathGame}");
-                //overlay.Start(processLaunched);
                 bool isRun = true;
                 while(isRun)
                 {
