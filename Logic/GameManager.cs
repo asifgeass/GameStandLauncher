@@ -59,7 +59,7 @@ namespace Logic
         }
         static async Task SetFokus(ProcessSD proc)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 2; i++)
             {
                 try
                 {

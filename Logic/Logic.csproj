@@ -89,6 +89,7 @@
     <Compile Include="ExtensionsOld.cs" />
     <Compile Include="Helpers\HexString.cs" />
     <Compile Include="Helpers\RegPath.cs" />
+    <Compile Include="Helpers\WindowAPI.cs" />
     <Compile Include="MouseHookFolder\MouseHookAdapter.cs" />
     <Compile Include="MouseHookFolder\MouseHook.cs" />
     <Compile Include="MouseHookFolder\Win32Api.cs" />
