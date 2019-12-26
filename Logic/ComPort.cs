@@ -53,7 +53,7 @@ namespace Logic
             string[] ports = SerialPort.GetPortNames();
             foreach (var item in ports)
             {
-                Ex.Log($"В системе найден порт={item};");
+                //Ex.Log($"В системе найден порт={item};");
                 SerialPort port = null;
                 try
                 {
@@ -64,7 +64,7 @@ namespace Logic
                 }
                 catch (Exception ex)
                 {
-                    ex.Log($"Не удалось создать порт с именем={item};");
+                    //ex.Log($"Не удалось создать порт с именем={item};");
                     continue;
                 }
                 try
@@ -73,21 +73,21 @@ namespace Logic
                 }
                 catch (Exception ex)
                 {
-                    ex.Log($"Не удалось открыть порт={item};");
+                    //ex.Log($"Не удалось открыть порт={item};");
                     continue;
                 }
-                Ex.Log($"{item}: Ошибок нет. Осталось прочитать.");
+                //Ex.Log($"{item}: Ошибок нет. Осталось прочитать.");
                 var data = ReadPortIncomes(port);
-                Ex.Log($"Прочитано из порта (текст)={data.Txt};");
-                Ex.Log($"Прочитано из порта (код)={data.Hex};");
+                //Ex.Log($"Прочитано из порта (текст)={data.Txt};");
+                //Ex.Log($"Прочитано из порта (код)={data.Hex};");
                 if (data.Txt.Contains("{button="))
                 {                    
                     return port;
                 }
                 await Task.Delay(1000);
                 data = ReadPortIncomes(port);
-                Ex.Log($"Прочитано из порта (текст)={data.Txt};");
-                Ex.Log($"Прочитано из порта (код)={data.Hex};");
+                //Ex.Log($"Прочитано из порта (текст)={data.Txt};");
+                //Ex.Log($"Прочитано из порта (код)={data.Hex};");
                 if (data.Txt.Contains("{button="))
                 {                    
                     return port;
@@ -101,7 +101,7 @@ namespace Logic
             Ex.Try(() =>
             { gotbytes = port.BytesToRead; });
             //Ex.Log($"gotbytes={gotbytes}");
-            Ex.Log($"Обнаружено {gotbytes} байт для чтения.");
+            //Ex.Log($"Обнаружено {gotbytes} байт для чтения.");
             var gotPortIncome = new HexString();
             try
             {
