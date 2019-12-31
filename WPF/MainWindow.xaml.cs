@@ -231,7 +231,7 @@ namespace WPF
             //    }
             //}
 
-            await Task.Delay(1500);
+            await Task.Delay(3000);
             //isClickable = true;
             WindowAPI.RemoveWindowExTransparent(hwnd);
         }
