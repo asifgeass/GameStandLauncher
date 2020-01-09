@@ -6,9 +6,8 @@
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
         Title="MainWindow" Width="1280" Height="720" ResizeMode="NoResize" 
-        Topmost="False"  WindowStyle="None"  AllowsTransparency="True"
-        
-        Loaded="Window_Loaded" Closed="Window_Closed" 
+        Topmost="False"  WindowStyle="None"  AllowsTransparency="True"        
+        Closed="Window_Closed" 
         Initialized="Window_Initialized" SourceInitialized="Window_SourceInitialized" >
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" 
@@ -38,8 +37,11 @@
                 <RowDefinition Height="10*"/>
                 <RowDefinition Height="10*"/>
                 <RowDefinition Height="10*"/>
+                <RowDefinition Height="10*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"/>
+                <ColumnDefinition Width="10*"/>
                 <ColumnDefinition Width="10*"/>
                 <ColumnDefinition Width="10*"/>
                 <ColumnDefinition Width="10*"/>

@@ -26,7 +26,6 @@ namespace WPF
         {            
 
         }
-
         public MainWindow(bool re1param):base()
         {
             InitializeComponent();
@@ -40,10 +39,6 @@ namespace WPF
             Ex.Log($"argumented ctor isRelaunched={SystemManager.isRe1ParamExist}");
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {            
-           
-        }
         private void SetEventSubscribes()
         {
             SystemManager.OnBeforeRelaunchApp += DisableUI;
@@ -155,7 +150,7 @@ namespace WPF
 
             //box.HorizontalContentAlignment = HorizontalAlignment.Center;
             //box.VerticalContentAlignment = VerticalAlignment.Top;
-            box.FontSize = 20;            
+            box.FontSize = 19;            
             box.FontFamily = new FontFamily("Arial");            
             return box;
         }
@@ -175,7 +170,7 @@ namespace WPF
                 var rnd = new Random(i * 10 + j);
                 while (true)
                 {
-                    var interval = rnd.Next(5, 30);
+                    var interval = rnd.Next(10, 50);
                     await Task.Delay(interval * 1000);
                     var top = rnd.Next(5, 30);
                     var left = rnd.Next(5, 40);
@@ -300,9 +295,9 @@ namespace WPF
                 Show($"Error at 'GameManager.GetAllGames()'\n{ex.Message}");
             }
             int numGame = 0;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < gamesGrid.RowDefinitions.Count; i++)
             {
-                for (int j = 0; j < 7; j++)
+                for (int j = 0; j < gamesGrid.ColumnDefinitions.Count; j++)
                 {
                     if (numGame >= listGames.Length)
                     { break; }
