@@ -204,8 +204,9 @@ namespace WPF
 
         private async Task OnClickGame(string content, gridCellUser grid, TextBlock lblControl, ThicknessAnimation marginAnimation, DoubleAnimation fontAnimation)
         {
-            WindowAPI.SetWindowExTransparent(hwnd);
+            if(false)WindowAPI.SetWindowExTransparent(hwnd);
 
+            grid.contentGrid.IsEnabled = false;
             grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
             lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
             var task = GameManager.RunGame(content);
@@ -227,8 +228,9 @@ namespace WPF
             //}
 
             await Task.Delay(3000);
+            grid.contentGrid.IsEnabled = true;
             //isClickable = true;
-            WindowAPI.RemoveWindowExTransparent(hwnd);
+            if (false)WindowAPI.RemoveWindowExTransparent(hwnd);
         }
 
         private static ThicknessAnimation RandomMarginAnimation(double left, double top, double right, double length)
