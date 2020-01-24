@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security;
 using System.Text;
@@ -117,6 +118,8 @@ namespace TuningGameStand
             RegistryKey key = Registry.CurrentUser.OpenSubKey(RegAutostart, true);
             if(key==null)
             { throw new Exception($@"Путь реестра не найден:\n'{RegAutostart}'\nvoid SetAutostartReg(bool isChecked)"); }
+            if(!File.Exists(AppPath))
+            { throw new Exception($@"Файл не найден:\n'{AppPath}'\nvoid SetAutostartReg(bool isChecked)"); }
             if (isChecked)
             {
                 key.SetValue(AppName, AppPath);                
