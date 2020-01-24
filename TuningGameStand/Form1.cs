@@ -26,7 +26,8 @@ namespace TuningGameStand
         public Form1()
         {
             InitializeComponent();
-            AppPath = Application.ExecutablePath.Replace(SettingsAppName, AppName);            
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            AppPath = Path.Combine(baseDir, $"{AppName}.exe");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -117,9 +118,9 @@ namespace TuningGameStand
         {
             RegistryKey key = Registry.CurrentUser.OpenSubKey(RegAutostart, true);
             if(key==null)
-            { throw new Exception($@"Путь реестра не найден:\n'{RegAutostart}'\nvoid SetAutostartReg(bool isChecked)"); }
+            { throw new Exception($"Путь реестра не найден:\n'{RegAutostart}'\nvoid SetAutostartReg(bool isChecked)"); }
             if(!File.Exists(AppPath))
-            { throw new Exception($@"Файл не найден:\n'{AppPath}'\nvoid SetAutostartReg(bool isChecked)"); }
+            { throw new Exception($"Файл не найден:\n'{AppPath}'\nTuningGameStand.exe должен находиться в папке GameStand."); }
             if (isChecked)
             {
                 key.SetValue(AppName, AppPath);                
@@ -144,6 +145,7 @@ namespace TuningGameStand
             }
             catch (Exception ex)
             {
+                checkBoxAutoStart.Checked = !checkBoxAutoStart.Checked;
                 Show(ex.Message);
             }
         }
