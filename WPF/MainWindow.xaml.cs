@@ -23,12 +23,11 @@ namespace WPF
         bool isClickable = true;
         IntPtr hwnd;
         public MainWindow()
-        {            
-
-        }
-        public MainWindow(bool re1param):base()
         {
             InitializeComponent();
+        }
+        public MainWindow(bool re1param):this()
+        {            
             SystemManager.isRe1ParamExist = false;
 #if DEBUG
             WindowState = WindowState.Normal;
