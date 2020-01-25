@@ -37,7 +37,7 @@ namespace Logic
         
         public static async Task KillAllGames()
         {
-            Ex.Log("KillAllGames(): запущен.");
+            Ex.Log("GameManager.KillAllGames()");
             System.Diagnostics.Process[] bunchProcesses = System.Diagnostics.Process.GetProcesses().Where(x => x.MainWindowTitle != "").ToArray();
             foreach (System.Diagnostics.Process item in bunchProcesses)
             {

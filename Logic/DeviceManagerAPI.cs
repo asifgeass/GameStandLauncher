@@ -11,6 +11,7 @@ using System.Management;
 //using System.Windows.Forms;
 using NLog;
 using System.IO.Ports;
+using System.Threading.Tasks;
 //using TVSender;
 //using RJCP.IO.Ports;
 
@@ -75,6 +76,10 @@ namespace DisableDevice
         public static bool IsSensorExist()
         {
             return IsSensorExist(SensorName);
+        }
+        public static async Task<bool> IsSensorExistAsync()
+        {
+            return await Task.Run(()=> IsSensorExist(SensorName));
         }
         public static string GetInstancePathComPort(string com)
         {

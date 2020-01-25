@@ -23,7 +23,7 @@ namespace Logic
         #endregion
 
         #region Fields
-        private static bool isSensorActiveOnLaunch = false;
+        private static bool isSensorWasActiveOnLaunch = false;
         private static bool isShowTaskbarOnExit = true;
         #endregion
 
@@ -44,9 +44,10 @@ namespace Logic
         #endregion
 
         #region Public Methods
-        public static void OnWindowLoaded()
+        public static async Task OnWindowLoadedAsync()
         {
-            Ex.Catch("Попытка скрыть панель задач", () =>
+            Ex.Log("SystemManager.OnWindowLoadedAsync()");
+            Ex.Catch("SystemManager: Попытка скрыть панель задач", () =>
             {
 #pragma warning disable CS0162 // Unreachable code detected
                 if (false) Taskbar.Hide();
@@ -57,32 +58,45 @@ namespace Logic
 #endif
             });
             
-            Ex.Log("Taskbar.Hide() passed.");
-            isSensorActiveOnLaunch = DeviceManagerApi.IsSensorExist();
+            Ex.Log("SystemManager.Taskbar.Hide() passed.");
+            if (!isRe1ParamExist) isSensorWasActiveOnLaunch = await DeviceManagerApi.IsSensorExistAsync();
+            else isSensorWasActiveOnLaunch = true;
+            Ex.Log($"SystemManager.isSensorWasActiveOnLaunch={isSensorWasActiveOnLaunch}");
             GameManager.KillAllGames().RunParallel();
             CheckSensor().RunParallel();
             //mh = new MouseHookAdapter();
-            if (isSensorActiveOnLaunch == false)
+            if (isSensorWasActiveOnLaunch == false)
             {
                 OnSensorFound += RelaunchApp;
             }
             ComPort.PortReader().RunParallel();
-            try
-            {
-                //GameManager.DisableWPFTabletSupport();
-            }
-            catch (Exception ex)
-            { ex.Log("Попытка отключить стилус"); }
-            Ex.Log($"isRelaunched={isRe1ParamExist}");
-            Ex.Log($"isShowTaskbarOnExit={isShowTaskbarOnExit}");
+            Ex.Log($"SystemManager.isRelaunched={isRe1ParamExist}");
+            Ex.Log($"SystemManager.isShowTaskbarOnExit={isShowTaskbarOnExit}");
             SetRegDisableSwipeEdgeMachine();
             OnScreenSaverDetected += async () => await GameManager.KillAllGames();
             CheckScreenSaver().RunParallel();
             WarningSwipe();
         }
 
+        public static async void RelaunchApp()
+        {
+            if (isRe1ParamExist == false) //Change/reverse relaunch logic HERE. false: relaunch without param
+            {
+                Ex.Log("SystemManager.RelaunchApp()");
+                OnBeforeRelaunchApp();
+                var path = Application.ResourceAssembly.Location; //AppDomain.CurrentDomain.BaseDirectory           
+                Ex.Log($"SystemManager.RelaunchApp(): path:\n{path}");                
+                System.Diagnostics.Process.Start(path, "re1"); //if (isRe1ParamExist == false)
+                //System.Diagnostics.Process.Start(path); //if (isRe1ParamExist == true)
+                isShowTaskbarOnExit = false;
+                await Task.Delay(1500);
+                Application.Current.Shutdown();
+            }
+        }
+
         private static void WarningSwipe()
         {
+            Ex.Log("SystemManager.WarningSwipe()");
             StringBuilder msg = new StringBuilder("ВНИМАНИЕ! Не отключены свайпы границ экрана в Windows, что нарушает безопасность.\n\n");
             msg.AppendLine("Воспользуйтесь TuningGameStand.exe от имени администратора для отключения свайпов.\n");
             msg.AppendLine("Для отключения этого сообщения (не рекомендуется) в файле settings.ini выставьте параметр DisableSwipeWarning=1.\n");
@@ -94,6 +108,7 @@ namespace Logic
             set.Save();
             if (RegPath.isDisabledSwipes==false && isForceDisable==false)
             {
+                Ex.Log("SystemManager.OnSwipesEnabledWarning()");
                 OnSwipesEnabledWarning();
             }
         }
@@ -116,6 +131,7 @@ namespace Logic
         }
         public static async Task CheckScreenSaver()
         {
+            Ex.Log("SystemManager.CheckScreenSaver()");
             bool isScreensaverRuning;
             bool isDoneOnce = false;
             while (true)
@@ -136,20 +152,6 @@ namespace Logic
             Ex.Log("CheckScreenSaver() while(true) finished.");
         }
 
-        public static async void RelaunchApp()
-        {
-            if (isRe1ParamExist == false) //Change/reverse relaunch logic HERE. false: relaunch without param
-            {
-                OnBeforeRelaunchApp();
-                var path = Application.ResourceAssembly.Location;
-                Ex.Log($"RelaunchApp(): рестарт программы={path}");
-                System.Diagnostics.Process.Start(path, "re1"); //if (isRe1ParamExist == false)
-                //System.Diagnostics.Process.Start(path); //if (isRe1ParamExist == true)
-                isShowTaskbarOnExit = false;
-                await Task.Delay(1500);
-                Application.Current.Shutdown();
-            }
-        }
         public static void WakeMonitor()
         {
             //Ex.Log("Wake Monitor");
@@ -159,6 +161,7 @@ namespace Logic
 
         public static async Task CheckSensor()
         {
+            Ex.Log("SystemManager.CheckSensor()");
             Task checking = Task.CompletedTask;
             CancellationTokenSource cancelTokenSource = null;
             short count = 0;
@@ -299,6 +302,7 @@ namespace Logic
 
         public static void SetRegDisableSwipeEdgeMachine()
         {
+            Ex.Log("SystemManager.SetRegDisableSwipeEdgeMachine()");
             try
             {
                 RegistryKey key = RegPath.GetCreatePath(RegPath.RegSwipeEdge, 1, true);

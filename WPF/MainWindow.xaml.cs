@@ -38,6 +38,27 @@ namespace WPF
             Ex.Log($"argumented ctor isRelaunched={SystemManager.isRe1ParamExist}");
         }
 
+        private void Window_Initialized(object sender, EventArgs e)
+        {
+            ReloadGrid();
+            SystemManager.OnWindowLoadedAsync();
+            SetEventSubscribes();
+            SetBackground();
+            SetHeadline();
+        }
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            try
+            {
+                Window window = Window.GetWindow(this);
+                var wih = new WindowInteropHelper(window);
+                hwnd = wih.Handle;
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
+            }
+        }
         private void SetEventSubscribes()
         {
             SystemManager.OnBeforeRelaunchApp += DisableUI;
@@ -54,7 +75,7 @@ namespace WPF
 
         private void SetHeadline()
         {
-            Ex.Log("SetHeadline() called.");
+            Ex.Log("MainWindow.SetHeadline()");
             try
             {
                 var local = new SavingManager(Where.local);
@@ -69,7 +90,7 @@ namespace WPF
 
         private void SetBackground()
         {
-            Ex.Log("SetBackground(): called");
+            Ex.Log("MainWindow.SetBackground()");
             try
             {
                 if (File.Exists("background.png"))
@@ -155,7 +176,7 @@ namespace WPF
         }
         private void ReloadGrid()
         {
-            Ex.Log("ReloadGrid(): called.");
+            Ex.Log("MainWindow.ReloadGrid()");
             ClearGrid();
             FillGrid();
         }
@@ -285,6 +306,7 @@ namespace WPF
         }
         private void FillGrid()
         {
+            Ex.Log("MainWindow.FillGrid()");
             string[] listGames = null;
             try
             {
@@ -340,22 +362,6 @@ namespace WPF
             Ex.Log("DisableUI(): called.");
             gamesGrid.IsEnabled = false;
             label1.Content = "Пожалуйста подождите / Please Wait";
-        }
-
-        private void Window_Initialized(object sender, EventArgs e)
-        {
-            ReloadGrid();
-            SystemManager.OnWindowLoaded();
-            SetEventSubscribes();
-            SetBackground();
-            SetHeadline();
-        }
-
-        private void Window_SourceInitialized(object sender, EventArgs e)
-        {
-            Window window = Window.GetWindow(this);
-            var wih = new WindowInteropHelper(window);
-            hwnd = wih.Handle;            
         }
     }
 }

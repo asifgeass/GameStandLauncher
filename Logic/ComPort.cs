@@ -12,6 +12,7 @@ namespace Logic
         public static SerialPort port=null;
         public static async Task PortReader()
         {
+            Ex.Log("ComPort.PortReader()");
             await Task.Delay(2000);            
             while(port==null)
             {
