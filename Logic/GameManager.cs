@@ -80,10 +80,11 @@ namespace Logic
                 await KillAllGames();
                 //var overlay = new OverlayLauncher();
                 var processLaunched = ProcessSD.Start(_PathGame);
+                Ex.Log($"GameManager.RunGame(): ProcessLaunched={processLaunched}");
                 await Task.Delay(1000);
-                var getApps = ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !x.ProcessName.Contains("GameStand") && !x.ProcessName.Contains("devenv") && !x.ProcessName.Contains("explorer") && !x.ProcessName.Contains("TeamViewer")).ToArray();
-                Ex.Log($"Processes count={getApps?.Length};");
+                var getApps = ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !x.ProcessName.Contains("GameStand") && !x.ProcessName.Contains("devenv") && !x.ProcessName.Contains("explorer") && !x.ProcessName.Contains("TeamViewer")).ToArray();                
                 processLaunched = processLaunched ?? getApps.FirstOrDefault();
+                Ex.Log($"GameManager.RunGame(): ProcessToFocus={processLaunched}; count={getApps?.Length};");
                 SetFokus(processLaunched).RunParallel();
                 //Ex.Log($"Process Launched = {processLaunched.MainWindowTitle}({processLaunched.ProcessName});");
                 //Ex.Log($"Process Launched={_PathGame}");
