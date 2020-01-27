@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Width="1280" Height="720" ResizeMode="NoResize" 
-        Topmost="False"  WindowStyle="None"  AllowsTransparency="True"        
+        Title="GameStand" Width="1920" Height="1080" 
+        Topmost="False"  WindowStyle="None"          
         Closed="Window_Closed" 
         Initialized="Window_Initialized" SourceInitialized="Window_SourceInitialized" >
     <Window.Background>

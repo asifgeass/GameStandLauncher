@@ -31,6 +31,10 @@ namespace WPF
             SystemManager.isRe1ParamExist = false;
 #if DEBUG
             WindowState = WindowState.Normal;
+            this.WindowStyle = WindowStyle.ThreeDBorderWindow;
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            this.Width = 1280;
+            this.Height = 720;
 #else
             WindowState = WindowState.Maximized;
 #endif
