@@ -150,12 +150,17 @@ namespace WPF
             try
             {
                 var realExePath = GameManager.GetShortcutTarget(incPathGame);
-                imgControl.Source = imageSource ?? (realExePath == null ? Properties.Resources.game2.ToImageSource() : GameManager.GetHighResIcon(realExePath).ToImageSource() );
+                if(realExePath != null && !File.Exists(realExePath))
+                { Ex.Throw($"Ярлык {incPathGame}\nссылается на несуществующий файл:\n{realExePath}\n\nMainWindow.ImageCreateGameIcon()"); }
+
+                imgControl.Source = imageSource ?? 
+                    (realExePath == null ? Properties.Resources.game2.ToImageSource() 
+                    : GameManager.GetHighResIcon(realExePath).ToImageSource() );
             }
             catch(Exception ex)
             {
-                ex.Log($"Error at ImageCreateGameIcon(string incPathGame={incPathGame})\n{ex.Message}");
-                Show($"Ошибка с ярлыком {incPathGame};\n\n{ex.Message}\n\n MainWindow.ImageCreateGameIcon()");
+                ex.Throw($"Error at {incPathGame}:\n{ex.Message}\n\nMainWindow.ImageCreateGameIcon()");
+                //Show($"Ошибка с ярлыком {incPathGame};\n\n{ex.Message}\n\n MainWindow.ImageCreateGameIcon()");
             }
             imgControl.HorizontalAlignment = HorizontalAlignment.Stretch;
             imgControl.VerticalAlignment = VerticalAlignment.Stretch;
@@ -191,20 +196,10 @@ namespace WPF
             Image imgControl = ImageCreateGameIcon(content);
             imgControl.Loaded += async (s, e) =>
             {
-                var rnd = new Random(i * 10 + j);
+                var rnd = new Random(i * 100 + j);
                 while (true)
                 {
-                    var interval = rnd.Next(10, 50);
-                    await Task.Delay(interval * 1000);
-                    var top = rnd.Next(5, 30);
-                    var left = rnd.Next(5, 40);
-                    var animationTime = rnd.Next(5, 10);
-                    var leftRight = rnd.Next(1, 3);
-                    int right = leftRight == 1 ? 0 : left;
-                    left = right == 0 ? left : 0;
-                    ThicknessAnimation anim = RandomMarginAnimation(left, top, right, animationTime * 100);
-                    //Timeline.SetDesiredFrameRate(anim, 30); // 60 FPS
-                    imgControl.BeginAnimation(MarginProperty, anim);
+                    await SetIconGameAnimation(imgControl, rnd);
                 }
             };
             Grid.SetRow(imgControl, 0);
@@ -224,6 +219,21 @@ namespace WPF
             Grid.SetRow(grid, i);
             Grid.SetColumn(grid, j);
             gamesGrid.Children.Add(grid);
+        }
+
+        private static async Task SetIconGameAnimation(Image imgControl, Random rnd)
+        {
+            var interval = rnd.Next(10, 50);
+            await Task.Delay(interval * 1000);
+            var top = rnd.Next(5, 30);
+            var left = rnd.Next(5, 40);
+            var animationTime = rnd.Next(5, 10);
+            var leftRight = rnd.Next(1, 3);
+            int right = leftRight == 1 ? 0 : left;
+            left = right == 0 ? left : 0;
+            ThicknessAnimation anim = RandomMarginAnimation(left, top, right, animationTime * 100);
+            //Timeline.SetDesiredFrameRate(anim, 30); // 60 FPS
+            imgControl.BeginAnimation(MarginProperty, anim);
         }
 
         private async Task OnClickGame(string content, gridCellUser grid, TextBlock lblControl, ThicknessAnimation marginAnimation, DoubleAnimation fontAnimation)

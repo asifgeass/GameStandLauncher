@@ -59,8 +59,10 @@ namespace Logic
             });
             
             Ex.Log("SystemManager.Taskbar.Hide() passed.");
+
             if (!isRe1ParamExist) isSensorWasActiveOnLaunch = await DeviceManagerApi.IsSensorExistAsync();
             else isSensorWasActiveOnLaunch = true;
+
             Ex.Log($"SystemManager.isSensorWasActiveOnLaunch={isSensorWasActiveOnLaunch}");
             GameManager.KillAllGames().RunParallel();
             CheckSensor().RunParallel();
@@ -181,7 +183,7 @@ namespace Logic
                 cancelTokenSource = cancelTokenSource ?? new CancellationTokenSource();
                 bool isTaskComplete = checking.IsCompleted;
                 //Ex.Log($"isTaskComplete={checking.Status}({checking.IsCompleted})");
-                bool isFound = DeviceManagerApi.IsSensorExist();
+                bool isFound = await DeviceManagerApi.IsSensorExistAsync();
                 //bool isFound = boolTest; //TEST
                 if (isFound)
                 {
@@ -210,7 +212,7 @@ namespace Logic
         public static async Task CheckBrowser(CancellationToken token)
         {
             bool isWork = true;
-            Ex.Log("Task CheckBrowser: Started.");
+            Ex.Log("SystemManager.CheckBrowser()");
             while (isWork)
             {
                 KillBrowser();
@@ -218,11 +220,11 @@ namespace Logic
                 //Ex.Log($"token.IsCancellationRequested={token.IsCancellationRequested}");
                 if (token.IsCancellationRequested)
                 {
-                    Ex.Log("Task CheckBrowser: Got Cancel Token");
+                    Ex.Log("SystemManager.CheckBrowser(): Got Cancel Token");
                     isWork = false;
                 }
             }
-            Ex.Log("Task CheckBrowser: Ended.");
+            Ex.Log("SystemManager.CheckBrowser() Finished.");
         }
 
         public static void KillBrowser()

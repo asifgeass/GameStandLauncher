@@ -92,16 +92,16 @@ namespace Logic
                 while(isRun)
                 {
                     await Task.Delay(2000);
-                    bool isFound = DeviceManagerApi.IsSensorExist();
+                    bool isFound = await DeviceManagerApi.IsSensorExistAsync();
                     if(!isFound)
                     {
                         Ex.Log("Сенсор отключился 1");
                         await Task.Delay(60000);
-                        bool isFoundAfterTime = DeviceManagerApi.IsSensorExist();
+                        bool isFoundAfterTime = await DeviceManagerApi.IsSensorExistAsync();
                         if(!isFoundAfterTime)
                         {
                             //KillGame(processLaunched);
-                            Ex.Log("Сенсор отключился 2; Закрываем все;");
+                            Ex.Log("Сенсор отключен спустя 60с -> Закрываем все;");
                             isRun = false;
                             await KillAllGames();                            
                         }
