@@ -151,7 +151,6 @@ namespace Logic
                 while (true)
                 {
                     isScreensaverRuning = ScreenSaverController.GetScreenSaverRunning();
-                    Ex.Log($"SystemManager.CheckScreenSaver() isScreensaverRuning={isScreensaverRuning}");
                     if (!isScreensaverRuning)
                     {
                         isFirstTime = true;

@@ -32,67 +32,16 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid x:Name="gamesGrid" Grid.Column="1" Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="10*"/>
-                <RowDefinition Height="10*"/>
-                <RowDefinition Height="10*"/>
-                <RowDefinition Height="10*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="10*"/>
-            </Grid.ColumnDefinitions>
-            <Image x:Name="imgTest" 
-               HorizontalAlignment="Stretch" 
-               Margin="30,10,6,3" 
-               VerticalAlignment="Stretch" 
-               Stretch="None" 
-               MouseUp="imgTest_MouseUp" 
-               TouchDown="ImgTest_TouchDown" 
-               AutomationProperties.HelpText="TExt"                
-               AutomationProperties.IsRowHeader="True" 
-               AutomationProperties.ItemStatus="Some Text" 
-               AutomationProperties.Name="Name Text"
-               />
-            <Button x:Name="button" 
-                    Content="Start Main" 
-                    Grid.Column="1" 
-                    HorizontalAlignment="Left" 
-                    Height="64" 
-                    Margin="9,51,0,0" Grid.Row="1" 
-                    VerticalAlignment="Top" 
-                    Width="120" 
-                    Click="button_Click"/>
-            <Label x:Name="label"
-               Content="Angry Birds Space Invaders" 
-               HorizontalAlignment="Stretch"
-               VerticalAlignment="Stretch"
-               Margin="10,195,10,5"
-               FontSize="20" 
-               FontFamily="Adobe Gothic Std B" 
-               HorizontalContentAlignment="Center"
-               />
-            <Button x:Name="button1" 
-                Content="Test1" 
-                Grid.Column="3" 
-                HorizontalAlignment="Left" 
-                Margin="23,23,0,0" 
-                Grid.Row="1" 
-                VerticalAlignment="Top" 
-                Width="129" Height="46" 
-                Click="button1_Click"/>
-            <Button x:Name="button2" Content="bool Test = true" Grid.Column="2" HorizontalAlignment="Left" Height="56" Margin="122,15,0,0" VerticalAlignment="Top" Width="156" Click="button2_Click" Grid.ColumnSpan="3"/>
-            <Button x:Name="button3" Content="bool Test = false" Grid.Column="2" HorizontalAlignment="Left" Height="51" Margin="127,92,0,0" VerticalAlignment="Top" Width="150" Click="button3_Click" Grid.ColumnSpan="3"/>
-            <TextBlock x:Name="textBlock" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Grid.Column="2" Grid.Row="1" TextWrapping="Wrap" Text="Shantae and the Piratcy Bay of the black wolf" FontSize="22" TextAlignment="Center" FontFamily="Arial"/>
-        </Grid>
+        <ScrollViewer Grid.Row="1" Grid.Column="1"
+                      PanningMode="HorizontalOnly"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Disabled"
+                      >
+            <WrapPanel Orientation="Vertical" Name="wrapPanelGame">
+                
+            </WrapPanel>
+        </ScrollViewer>
+        
         <Label x:Name="label1" 
                Content="Игры" 
                Grid.Column="1" 
@@ -100,7 +49,7 @@
                VerticalAlignment="Stretch"
                HorizontalContentAlignment="Center"
                VerticalContentAlignment="Center" 
-               FontSize="48" 
+               FontSize="64" 
                FontFamily="Adobe Caslon Pro Bold" 
                Foreground="#FFE2EBEC"
                />

@@ -141,7 +141,7 @@ namespace WPF
             Image imgControl = ImageCreateGameIcon(pathImg);
             Grid.SetRow(imgControl, 4);
             Grid.SetColumn(imgControl, 1);
-            gamesGrid.Children.Add(imgControl);
+            //gamesGrid.Children.Add(imgControl);
         }
         private Image ImageCreateGameIcon(string incPathGame)
         {
@@ -205,32 +205,45 @@ namespace WPF
                 ex.Log("Error at 'GameManager.GetAllGames()'");
                 Show($"Error at 'GameManager.GetAllGames()'\n{ex.Message}");
             }
-            int gameNumber = 0;
-            for (int i = 0; i < gamesGrid.RowDefinitions.Count; i++)
+            
+            wrapPanelGame.ItemHeight = 216;
+            wrapPanelGame.ItemWidth = 200;
+
+            foreach (var item in listGames)
             {
-                if (gameNumber >= listGames.Length)
-                { break; }
-                for (int j = 0; j < gamesGrid.ColumnDefinitions.Count; j++)
+                try
                 {
-                    if (gameNumber >= listGames.Length)
-                    { break; }
-                    try
-                    {
-                        var cell = CreateFilledCell(listGames[gameNumber]);
-                        Grid.SetRow(cell, i);
-                        Grid.SetColumn(cell, j);                        
-                    }
-                    catch (Exception ex)
-                    {
-                        j--;
-                        Task.Run(() =>
-                        {
-                            ex.InnerGetLast().Show();
-                        });
-                    }
-                    gameNumber++;
+                    wrapPanelGame.Children.Add(CreateFilledCell(item));
                 }
+                catch (Exception ex)
+                {
+                    Task.Run( () => ex.InnerGetLast().Show() );
+                }                
             }
+
+            //int gameNumber = 0;
+            //for (int i = 0; i < gamesGrid.RowDefinitions.Count; i++)
+            //{
+            //    if (gameNumber >= listGames.Length)
+            //    { break; }
+            //    for (int j = 0; j < gamesGrid.ColumnDefinitions.Count; j++)
+            //    {
+            //        if (gameNumber >= listGames.Length)
+            //        { break; }
+            //        try
+            //        {
+            //            var cell = CreateFilledCell(listGames[gameNumber]);
+            //            Grid.SetRow(cell, i);
+            //            Grid.SetColumn(cell, j);                        
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            j--;
+            //            Task.Run( () => ex.InnerGetLast().Show() );
+            //        }
+            //        gameNumber++;
+            //    }
+            //}
         }
         private ContentControl CreateFilledCell(string content)
         {
@@ -254,16 +267,24 @@ namespace WPF
             grid.contentGrid.Children.Add(imgControl);
             grid.contentGrid.Children.Add(lblControl);
 
-            ThicknessAnimation marginAnimation = MarginAnimation();
-            DoubleAnimation fontAnimation = FontAnimation();
+            bool isDown = false;
+            bool isUp = false;
+            bool isEnter = false;
+            bool isLeave = false;
 
-            grid.contentGrid.MouseDown += async (o, e) => OnClickGame(content, grid, lblControl, marginAnimation, fontAnimation);
-            grid.contentGrid.TouchDown += async (o, e) => OnClickGame(content, grid, lblControl, marginAnimation, fontAnimation);            
+            grid.contentGrid.MouseDown += async (o, e) => OnClickGame(content, grid, lblControl);
+            grid.contentGrid.TouchDown += async (o, e) =>
+            {
+                isDown = true;
+                if(isDown && isUp) OnClickGame(content, grid, lblControl);
+            };
+            grid.contentGrid.ManipulationDelta += ContentGrid_ManipulationDelta;
 
-
-            gamesGrid.Children.Add(grid);
+            //gamesGrid.Children.Add(grid);
             return grid;
         }
+
+        private void ContentGrid_ManipulationDelta(object sender, ManipulationDeltaEventArgs e) => throw new NotImplementedException();
 
         private static async Task PlayIconGameAnimation(Image imgControl, Random rnd)
         {
@@ -280,30 +301,17 @@ namespace WPF
             imgControl.BeginAnimation(MarginProperty, anim);
         }
 
-        private async Task OnClickGame(string content, gridCellUser grid, TextBlock lblControl, ThicknessAnimation marginAnimation, DoubleAnimation fontAnimation)
+        private async Task OnClickGame(string content, gridCellUser grid, TextBlock lblControl)
         {
             if(false)WindowAPI.SetWindowExTransparent(hwnd);
+
+            ThicknessAnimation marginAnimation = MarginAnimation();
+            DoubleAnimation fontAnimation = FontAnimation();
 
             grid.contentGrid.IsEnabled = false;
             grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
             lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
             var task = GameManager.RunGame(content);
-
-            //if (isClickable)
-            //{
-            //    isClickable = false;
-            //    try
-            //    {
-            //        grid.contentGrid.BeginAnimation(MarginProperty, marginAnimation);
-            //        lblControl.BeginAnimation(Label.FontSizeProperty, fontAnimation);
-            //        var task = GameManager.RunGame(content);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Show(ex.Message);
-            //        isClickable = true;
-            //    }
-            //}
 
             await Task.Delay(3000);
             grid.contentGrid.IsEnabled = true;
@@ -349,23 +357,10 @@ namespace WPF
             animation.EasingFunction = ease;
             return animation;
         }
-        private void ControlsCircle(int i, int j, string content)
-        {
-            var ControlsList = new List<FrameworkElement>();
-            ControlsList.Add(ImageCreateGameIcon(content));
-            ControlsList.Add(LabelCreateGameName(content));
-
-            foreach (var item in ControlsList)
-            {
-                Grid.SetRow(item, i);
-                Grid.SetColumn(item, j);
-                gamesGrid.Children.Add(item);
-            }
-        }
 
         private void ClearGrid()
         {
-            gamesGrid.Children.Clear();
+            wrapPanelGame.Children.Clear();
         }
         private void imgTest_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -392,7 +387,7 @@ namespace WPF
         private void DisableUI()
         {
             Ex.Log("DisableUI(): called.");
-            gamesGrid.IsEnabled = false;
+            wrapPanelGame.IsEnabled = false;
             label1.Content = "Пожалуйста подождите / Please Wait";
         }
     }
