@@ -77,6 +77,8 @@ namespace Logic
             Ex.Log($"SystemManager.isShowTaskbarOnExit={isShowTaskbarOnExit}");
             SetRegDisableSwipeEdgeMachine();
             OnScreenSaverDetected += async () => await GameManager.KillAllGames();
+            int KillScreenSaverTimer = 60000; //1 min
+            OnScreenSaverDetected += async () => { await Task.Delay(KillScreenSaverTimer); WakeMonitor(); };
             CheckScreenSaver().RunParallel();
             WarningSwipe();
         }
@@ -136,18 +138,18 @@ namespace Logic
         {
             Ex.Log("SystemManager.CheckScreenSaver()");
             bool isScreensaverRuning;
-            bool isDoneOnce = false;
+            bool isFirstTime = true;
             while (true)
             {
                 isScreensaverRuning = ScreenSaverController.GetScreenSaverRunning();
                 if(!isScreensaverRuning)
                 {
-                    isDoneOnce = false;
+                    isFirstTime = true;
                 }
-                if (isScreensaverRuning && !isDoneOnce)
+                if (isScreensaverRuning && !isFirstTime)
                 {
                     OnScreenSaverDetected();
-                    isDoneOnce = true;
+                    isFirstTime = false;
                     await Task.Delay(30000);
                 }
                 await Task.Delay(2000);
