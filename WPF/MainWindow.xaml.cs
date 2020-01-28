@@ -222,9 +222,9 @@ namespace WPF
                     catch (Exception ex)
                     {
                         j--;
-                        await Task.Run(() =>
+                        Task.Run(() =>
                         {
-                            ex.Show($"FillGrid(): gameNumber={gameNumber}; gamePath={listGames[gameNumber]};");
+                            ex.InnerGetLast().Show();
                         });
                     }
                     gameNumber++;
