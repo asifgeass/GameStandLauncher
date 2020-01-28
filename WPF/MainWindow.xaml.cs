@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -189,18 +190,48 @@ namespace WPF
             ClearGrid();
             FillGrid();
         }
-        private void CreateFilledCell(int i, int j, string content)
+        private void FillGrid()
+        {
+            Ex.Log("MainWindow.FillGrid()");
+            string[] listGames = null;
+            try
+            {
+                listGames = GameManager.GetAllGames();
+            }
+            catch (Exception ex)
+            {
+                ex.Log("Error at 'GameManager.GetAllGames()'");
+                Show($"Error at 'GameManager.GetAllGames()'\n{ex.Message}");
+            }
+            int numGame = 0;
+            for (int i = 0; i < gamesGrid.RowDefinitions.Count; i++)
+            {
+                for (int j = 0; j < gamesGrid.ColumnDefinitions.Count; j++)
+                {
+                    if (numGame >= listGames.Length)
+                    { break; }
+                    var cell = CreateFilledCell(listGames[numGame]);
+                    Grid.SetRow(cell, i);
+                    Grid.SetColumn(cell, j);
+                    numGame++;
+                }
+            }
+
+
+        }
+        private ContentControl CreateFilledCell(string content)
         {
             var grid = new gridCellUser();
 
             Image imgControl = ImageCreateGameIcon(content);
-            imgControl.Loaded += async (s, e) =>
+            imgControl.Initialized += async (s, e) =>
             {
-                var rnd = new Random(i * 100 + j);
+                if (content == null) return;
+                var fileName = new Regex(@"[/\\][^/\\]*$").Match(content)?.Value;
+                int seed = fileName?.Length*10 ?? 0 + content.Length;
+                var rnd = new Random(seed);
                 while (true)
-                {
-                    await SetIconGameAnimation(imgControl, rnd);
-                }
+                { await PlayIconGameAnimation(imgControl, rnd); }
             };
             Grid.SetRow(imgControl, 0);
 
@@ -214,14 +245,14 @@ namespace WPF
             DoubleAnimation fontAnimation = FontAnimation();
 
             grid.contentGrid.MouseDown += async (o, e) => OnClickGame(content, grid, lblControl, marginAnimation, fontAnimation);
-            grid.contentGrid.TouchDown += async (o, e) => OnClickGame(content, grid, lblControl, marginAnimation, fontAnimation);
+            grid.contentGrid.TouchDown += async (o, e) => OnClickGame(content, grid, lblControl, marginAnimation, fontAnimation);            
 
-            Grid.SetRow(grid, i);
-            Grid.SetColumn(grid, j);
+
             gamesGrid.Children.Add(grid);
+            return grid;
         }
 
-        private static async Task SetIconGameAnimation(Image imgControl, Random rnd)
+        private static async Task PlayIconGameAnimation(Image imgControl, Random rnd)
         {
             var interval = rnd.Next(10, 50);
             await Task.Delay(interval * 1000);
@@ -318,33 +349,7 @@ namespace WPF
                 gamesGrid.Children.Add(item);
             }
         }
-        private void FillGrid()
-        {
-            Ex.Log("MainWindow.FillGrid()");
-            string[] listGames = null;
-            try
-            {
-                listGames = GameManager.GetAllGames();
-            }
-            catch (Exception ex)
-            {
-                ex.Log("Error at 'GameManager.GetAllGames()'");
-                Show($"Error at 'GameManager.GetAllGames()'\n{ex.Message}");
-            }
-            int numGame = 0;
-            for (int i = 0; i < gamesGrid.RowDefinitions.Count; i++)
-            {
-                for (int j = 0; j < gamesGrid.ColumnDefinitions.Count; j++)
-                {
-                    if (numGame >= listGames.Length)
-                    { break; }
-                    CreateFilledCell(i, j, listGames[numGame]);
-                    numGame++;
-                }
-            }
 
-
-        }
         private void ClearGrid()
         {
             gamesGrid.Children.Clear();
