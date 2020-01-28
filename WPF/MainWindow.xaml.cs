@@ -145,6 +145,7 @@ namespace WPF
         }
         private Image ImageCreateGameIcon(string incPathGame)
         {
+            Ex.Log($"MainWindow.ImageCreateGameIcon() {incPathGame}");
             var imgControl = new Image();
             ImageSource imageSource = null;
             imageSource = GameManager.FindLocalImg(incPathGame);

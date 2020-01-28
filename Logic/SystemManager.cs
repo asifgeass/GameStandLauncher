@@ -78,9 +78,16 @@ namespace Logic
             SetRegDisableSwipeEdgeMachine();
             OnScreenSaverDetected += async () => await GameManager.KillAllGames();
             int KillScreenSaverTimer = 60000; //1 min
-            OnScreenSaverDetected += async () => { await Task.Delay(KillScreenSaverTimer); WakeMonitor(); };
+            OnScreenSaverDetected += async () => { await KillScreenSaverAfterTiming(KillScreenSaverTimer); };
             CheckScreenSaver().RunParallel();
             WarningSwipe();
+        }
+
+        private static async Task KillScreenSaverAfterTiming(int KillScreenSaverTimer)
+        {
+            await Task.Delay(KillScreenSaverTimer); 
+            Ex.Log($"SystemManager.KillScreenSaverAfterTiming(): {KillScreenSaverTimer/1000}s passed after screensaver started."); 
+            WakeMonitor();
         }
 
         public static async void RelaunchApp()
@@ -139,21 +146,32 @@ namespace Logic
             Ex.Log("SystemManager.CheckScreenSaver()");
             bool isScreensaverRuning;
             bool isFirstTime = true;
-            while (true)
+            try
             {
-                isScreensaverRuning = ScreenSaverController.GetScreenSaverRunning();
-                if(!isScreensaverRuning)
+                while (true)
                 {
-                    isFirstTime = true;
+                    isScreensaverRuning = ScreenSaverController.GetScreenSaverRunning();
+                    Ex.Log($"SystemManager.CheckScreenSaver() isScreensaverRuning={isScreensaverRuning}");
+                    if (!isScreensaverRuning)
+                    {
+                        isFirstTime = true;
+                    }
+                    if (isScreensaverRuning && isFirstTime)
+                    {
+                        Ex.Log("ScreenSaver Detected!");
+                        OnScreenSaverDetected();
+                        isFirstTime = false;
+                        await Task.Delay(30000);
+                    }
+                    await Task.Delay(2000);
                 }
-                if (isScreensaverRuning && !isFirstTime)
-                {
-                    OnScreenSaverDetected();
-                    isFirstTime = false;
-                    await Task.Delay(30000);
-                }
-                await Task.Delay(2000);
             }
+            catch (Exception ex)
+            {
+                ex.Log("!! CheckScreenSaver() disabled!");
+                Ex.Show("Непредвиденная ошибка!\nПроверка скринсейвера(заставки) Windows вызвала ошибку и не работает!");
+            }
+
             Ex.Log("CheckScreenSaver() while(true) finished.");
         }
 
@@ -323,9 +341,10 @@ namespace Logic
         #region Private Methods
         private static void WakeUpScreenSaver()
         {
+            Ex.Log("SystemManger.WakeUpScreenSaver()");
             if (ScreenSaverController.GetScreenSaverRunning())
             {
-                Ex.Log("WakeUpScreenSaver() ScreenSaverRunning==true");
+                Ex.Log("SystemManger.WakeUpScreenSaver() (ScreenSaverRunning==true)");
                 ScreenSaverController.KillScreenSaver();
             }
         }
