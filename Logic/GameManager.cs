@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using Logic.Helpers;
+using ExceptionManager;
 
 namespace Logic
 {

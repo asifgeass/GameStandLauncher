@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskbarHide", "#adds\Taskba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApp1", "WindowsFormsApp1\WindowsFormsApp1.csproj", "{10606095-8D2A-433C-B847-697E9121FA00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExceptionManager", "..\ExceptionManager\ExceptionManager\ExceptionManager.csproj", "{3AC1A6DB-15C0-4A53-943C-947A5E020C81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,14 @@ Global
 		{10606095-8D2A-433C-B847-697E9121FA00}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10606095-8D2A-433C-B847-697E9121FA00}.Release|x64.ActiveCfg = Release|Any CPU
 		{10606095-8D2A-433C-B847-697E9121FA00}.Release|x64.Build.0 = Release|Any CPU
+		{3AC1A6DB-15C0-4A53-943C-947A5E020C81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AC1A6DB-15C0-4A53-943C-947A5E020C81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AC1A6DB-15C0-4A53-943C-947A5E020C81}.Debug|x64.ActiveCfg = Debug|x64
+		{3AC1A6DB-15C0-4A53-943C-947A5E020C81}.Debug|x64.Build.0 = Debug|x64
+		{3AC1A6DB-15C0-4A53-943C-947A5E020C81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AC1A6DB-15C0-4A53-943C-947A5E020C81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AC1A6DB-15C0-4A53-943C-947A5E020C81}.Release|x64.ActiveCfg = Release|x64
+		{3AC1A6DB-15C0-4A53-943C-947A5E020C81}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

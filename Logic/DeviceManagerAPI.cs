@@ -12,6 +12,7 @@ using System.Management;
 using NLog;
 using System.IO.Ports;
 using System.Threading.Tasks;
+using ExceptionManager;
 //using TVSender;
 //using RJCP.IO.Ports;
 

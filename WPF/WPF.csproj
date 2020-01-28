@@ -110,6 +110,10 @@
       <Project>{fdfd4eeb-c202-4d93-a6e9-d8984a12d014}</Project>
       <Name>IconExtractor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ExceptionManager\ExceptionManager\ExceptionManager.csproj">
+      <Project>{3AC1A6DB-15C0-4A53-943C-947A5E020C81}</Project>
+      <Name>ExceptionManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IniSaver\IniSaver.csproj">
       <Project>{8fd63c6d-1c07-455f-84ff-cfa1c5c33985}</Project>
       <Name>IniSaver</Name>

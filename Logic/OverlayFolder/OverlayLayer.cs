@@ -1,4 +1,5 @@
-﻿using Overlay.NET.Common;
+﻿using ExceptionManager;
+using Overlay.NET.Common;
 using Overlay.NET.Wpf;
 using Process.NET.Windows;
 using System;

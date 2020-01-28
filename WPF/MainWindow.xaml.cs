@@ -1,4 +1,5 @@
-﻿using Logic;
+﻿using ExceptionManager;
+using Logic;
 using Logic.Helpers;
 using System;
 using System.Collections.Generic;
@@ -190,7 +191,7 @@ namespace WPF
             ClearGrid();
             FillGrid();
         }
-        private void FillGrid()
+        private async void FillGrid()
         {
             Ex.Log("MainWindow.FillGrid()");
             string[] listGames = null;
@@ -203,30 +204,41 @@ namespace WPF
                 ex.Log("Error at 'GameManager.GetAllGames()'");
                 Show($"Error at 'GameManager.GetAllGames()'\n{ex.Message}");
             }
-            int numGame = 0;
+            int gameNumber = 0;
             for (int i = 0; i < gamesGrid.RowDefinitions.Count; i++)
             {
+                if (gameNumber >= listGames.Length)
+                { break; }
                 for (int j = 0; j < gamesGrid.ColumnDefinitions.Count; j++)
                 {
-                    if (numGame >= listGames.Length)
+                    if (gameNumber >= listGames.Length)
                     { break; }
-                    var cell = CreateFilledCell(listGames[numGame]);
-                    Grid.SetRow(cell, i);
-                    Grid.SetColumn(cell, j);
-                    numGame++;
+                    try
+                    {
+                        var cell = CreateFilledCell(listGames[gameNumber]);
+                        Grid.SetRow(cell, i);
+                        Grid.SetColumn(cell, j);                        
+                    }
+                    catch (Exception ex)
+                    {
+                        j--;
+                        await Task.Run(() =>
+                        {
+                            ex.Show($"FillGrid(): gameNumber={gameNumber}; gamePath={listGames[gameNumber]};");
+                        });
+                    }
+                    gameNumber++;
                 }
             }
-
-
         }
         private ContentControl CreateFilledCell(string content)
         {
+            if (content == null) throw new NullReferenceException("MainWindow.CreateFilledCell(arg): arg=null");
             var grid = new gridCellUser();
 
             Image imgControl = ImageCreateGameIcon(content);
             imgControl.Initialized += async (s, e) =>
-            {
-                if (content == null) return;
+            {                
                 var fileName = new Regex(@"[/\\][^/\\]*$").Match(content)?.Value;
                 int seed = fileName?.Length*10 ?? 0 + content.Length;
                 var rnd = new Random(seed);
