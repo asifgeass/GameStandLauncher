@@ -45,8 +45,7 @@ namespace WPF
         }
 
         private void Window_Initialized(object sender, EventArgs e)
-        {
-            ReloadGrid();
+        {            
             SystemManager.OnWindowLoadedAsync();
             SetEventSubscribes();
             SetBackground();
@@ -205,9 +204,11 @@ namespace WPF
                 ex.Log("Error at 'GameManager.GetAllGames()'");
                 Show($"Error at 'GameManager.GetAllGames()'\n{ex.Message}");
             }
-            
-            wrapPanelGame.ItemHeight = 216;
-            wrapPanelGame.ItemWidth = 200;
+
+            int rows = 4;
+            int columns = 9;
+            wrapPanelGame.ItemHeight = ((1080-218) / rows) - 1;
+            wrapPanelGame.ItemWidth = (1920 / columns) - 1;
 
             foreach (var item in listGames)
             {
@@ -249,6 +250,8 @@ namespace WPF
         {
             if (content == null) throw new NullReferenceException("MainWindow.CreateFilledCell(arg): arg=null");
             var grid = new gridCellUser();
+            var button = new Button();
+            button.Content = grid;
 
             Image imgControl = ImageCreateGameIcon(content);
             imgControl.Initialized += async (s, e) =>
@@ -267,21 +270,15 @@ namespace WPF
             grid.contentGrid.Children.Add(imgControl);
             grid.contentGrid.Children.Add(lblControl);
 
-            bool isDown = false;
-            bool isUp = false;
-            bool isEnter = false;
-            bool isLeave = false;
-
-            grid.contentGrid.MouseDown += async (o, e) => OnClickGame(content, grid, lblControl);
-            grid.contentGrid.TouchDown += async (o, e) =>
-            {
-                isDown = true;
-                if(isDown && isUp) OnClickGame(content, grid, lblControl);
-            };
-            grid.contentGrid.ManipulationDelta += ContentGrid_ManipulationDelta;
+            button.Click += async (o, e) => OnClickGame(content, grid, lblControl);
+            //grid.contentGrid.ManipulationDelta += ContentGrid_ManipulationDelta;
 
             //gamesGrid.Children.Add(grid);
-            return grid;
+            button.Background = null;
+            button.BorderBrush = null;
+            button.Height = double.NaN;
+            
+            return button;
         }
 
         private void ContentGrid_ManipulationDelta(object sender, ManipulationDeltaEventArgs e) => throw new NotImplementedException();
@@ -389,6 +386,11 @@ namespace WPF
             Ex.Log("DisableUI(): called.");
             wrapPanelGame.IsEnabled = false;
             label1.Content = "Пожалуйста подождите / Please Wait";
+        }
+
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            ReloadGrid();
         }
     }
 }
