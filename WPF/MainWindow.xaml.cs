@@ -3,6 +3,7 @@ using Logic;
 using Logic.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -23,6 +24,7 @@ namespace WPF
         //bool isShowTaskbarOnExit = true;
         //readonly bool isRelaunched;
         bool isClickable = true;
+        bool isDown = false;
         IntPtr hwnd;
         public MainWindow()
         {
@@ -271,6 +273,22 @@ namespace WPF
             grid.contentGrid.Children.Add(lblControl);
 
             button.Click += async (o, e) => OnClickGame(content, grid, lblControl);
+            isDown = false;
+            button.TouchDown += async (o, e) => 
+            { Ex.Log($"TouchDown: isDown={isDown}"); isDown = true; };
+            button.TouchLeave += async (o, e) => 
+            { Ex.Log($"TouchLeave: isDown={isDown}"); isDown = false; };
+            button.TouchUp += async (o, e) =>
+            {
+                Ex.Log($"TouchUp: isDown={isDown}");
+                if(isDown)
+                {
+                    MessageBox.Show("MouseLeftButtonUp");
+                    //OnClickGame(content, grid, lblControl);
+                    isDown = false;
+                    e.Handled = true;
+                }                
+            };
             //grid.contentGrid.ManipulationDelta += ContentGrid_ManipulationDelta;
 
             //gamesGrid.Children.Add(grid);
