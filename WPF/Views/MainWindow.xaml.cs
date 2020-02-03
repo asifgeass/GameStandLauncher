@@ -16,7 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
-namespace WPF
+namespace WPF.Views
 {
     public partial class MainWindow : Window
     {
