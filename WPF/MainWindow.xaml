@@ -23,6 +23,9 @@
     <Window.Resources>
         <ResourceDictionary Source="Styles/StylesGeneral.xaml"/>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding OpenOptionsMenuCommand}" Gesture="F1"/>
+    </Window.InputBindings>
 
     <Grid>
         <Grid.RowDefinitions>
