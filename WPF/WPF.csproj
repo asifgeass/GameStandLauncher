@@ -86,9 +86,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ElementsView\LeftArrow.xaml.cs">
+      <DependentUpon>LeftArrow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ElementsView\RightArrow.xaml.cs">
+      <DependentUpon>RightArrow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="gridCellUser.xaml.cs">
       <DependentUpon>gridCellUser.xaml</DependentUpon>
     </Compile>
+    <Page Include="ElementsView\LeftArrow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ElementsView\RightArrow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

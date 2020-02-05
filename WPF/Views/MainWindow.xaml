@@ -13,7 +13,7 @@
         Closed="Window_Closed" 
         Initialized="Window_Initialized" SourceInitialized="Window_SourceInitialized"
         ContentRendered="Window_ContentRendered">
-    
+
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" 
                              StartPoint="0.5,0">
@@ -21,11 +21,11 @@
             <GradientStop Color="#FF4EE0D9" Offset="1"/>
         </LinearGradientBrush>
     </Window.Background>
-    
+
     <Window.Resources>
         <ResourceDictionary Source="/GameStand;component/Styles/StylesGeneral.xaml"/>
     </Window.Resources>
-    
+
     <Window.InputBindings>
         <KeyBinding Command="{Binding OpenOptionsMenuCommand}" Gesture="F1"/>
     </Window.InputBindings>
@@ -45,14 +45,31 @@
         <ScrollViewer Grid.Row="1" Grid.Column="1"
                       PanningMode="HorizontalOnly"
                       x:Name="scroller"
-                      HorizontalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Visible"
                       VerticalScrollBarVisibility="Disabled"
                       >
             <WrapPanel Orientation="Vertical" Name="wrapPanelGame">
-                
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
+                <Button Height="200" Width="350" Margin="10"/>
             </WrapPanel>
         </ScrollViewer>
-        
+
         <Label x:Name="label1" 
                Content="Игры" 
                Grid.Column="1" 

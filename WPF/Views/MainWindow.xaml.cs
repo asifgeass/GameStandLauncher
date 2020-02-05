@@ -200,6 +200,7 @@ namespace WPF.Views
             try
             {
                 listGames = GameManager.GetAllGames();
+                Shuffle(listGames);
             }
             catch (Exception ex)
             {
@@ -209,8 +210,8 @@ namespace WPF.Views
 
             int rows = 4;
             int columns = 9;
-            wrapPanelGame.ItemHeight = ((1080-218) / rows) - 1;
-            wrapPanelGame.ItemWidth = (1920 / columns) - 1;
+            wrapPanelGame.ItemHeight = ((1080 - (1080/100 * 17)) / rows) - 6;
+            wrapPanelGame.ItemWidth = ((1920 - (1920/100 * 4)) / columns) + 3;
 
             foreach (var item in listGames)
             {
@@ -247,6 +248,19 @@ namespace WPF.Views
             //        gameNumber++;
             //    }
             //}
+        }
+        public static void Shuffle<T>(IList<T> list)
+        {
+            Random rng = new Random();
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
         }
         private ContentControl CreateFilledCell(string content)
         {
