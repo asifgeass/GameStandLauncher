@@ -287,25 +287,7 @@ namespace WPF.Views
             grid.contentGrid.Children.Add(lblControl);
 
             button.Click += async (o, e) => OnClickGame(content, grid, lblControl);
-            isDown = false;
-            button.TouchDown += async (o, e) => 
-            { Ex.Log($"TouchDown: isDown={isDown}"); isDown = true; };
-            button.TouchLeave += async (o, e) => 
-            { Ex.Log($"TouchLeave: isDown={isDown}"); isDown = false; };
-            button.TouchUp += async (o, e) =>
-            {
-                Ex.Log($"TouchUp: isDown={isDown}");
-                if(isDown)
-                {
-                    MessageBox.Show("MouseLeftButtonUp");
-                    //OnClickGame(content, grid, lblControl);
-                    isDown = false;
-                    e.Handled = true;
-                }                
-            };
-            //grid.contentGrid.ManipulationDelta += ContentGrid_ManipulationDelta;
 
-            //gamesGrid.Children.Add(grid);
             button.Background = null;
             button.BorderBrush = null;
             button.Height = double.NaN;
