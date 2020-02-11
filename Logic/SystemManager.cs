@@ -26,6 +26,7 @@ namespace Logic
         #region Fields
         private static bool isSensorWasActiveOnLaunch = false;
         private static bool isShowTaskbarOnExit = true;
+        public static readonly bool DEBUG = false;
         #endregion
 
         #region DLLImport
@@ -36,8 +37,12 @@ namespace Logic
 
         static SystemManager()
         {
+#if DEBUG
+            DEBUG = true;
+#endif
             OnSensorFound += WakeMonitor;
             //OnScreenSaverDetected += async () => GameManager.KillAllGames().RunParallel();
+
         }
 
         #region Properties
@@ -50,16 +55,10 @@ namespace Logic
             Ex.Log("SystemManager.OnWindowLoadedAsync()");
             Ex.Catch("SystemManager: Попытка скрыть панель задач", () =>
             {
-#pragma warning disable CS0162 // Unreachable code detected
-                if (false) Taskbar.Hide();
-#pragma warning restore CS0162 // Unreachable code detected
-#if DEBUG
-#else
-                Taskbar.Hide();
-#endif
+                if (!DEBUG) Taskbar.Hide();
             });
             
-            Ex.Log("SystemManager.Taskbar.Hide() passed.");
+            Ex.Log("SystemManager.OnWindowLoadedAsync(): Taskbar.Hide() passed.");
 
             if (!isRe1ParamExist) isSensorWasActiveOnLaunch = await DeviceManagerApi.IsSensorExistAsync();
             else isSensorWasActiveOnLaunch = true;
@@ -72,7 +71,7 @@ namespace Logic
             {
                 OnSensorFound += RelaunchApp;
             }
-            ComPort.PortReader().RunParallel();
+            ComPort.PortReaderStart().RunParallel();
             Ex.Log($"SystemManager.isRelaunched={isRe1ParamExist}");
             Ex.Log($"SystemManager.isShowTaskbarOnExit={isShowTaskbarOnExit}");
             SetRegDisableSwipeEdgeMachine();
@@ -192,13 +191,7 @@ namespace Logic
                 await Task.Delay(2000);
                 Ex.TryLog("Попытка скрыть панель задач", () =>
                 {
-#pragma warning disable CS0162 // Unreachable code detected
-                    if (false) Taskbar.Hide();
-#pragma warning restore CS0162 // Unreachable code detected
-#if DEBUG
-#else
-                    Taskbar.Hide();
-#endif
+                    if (!DEBUG) Taskbar.Hide();
                 });
                 cancelTokenSource = cancelTokenSource ?? new CancellationTokenSource();
                 bool isTaskComplete = checking.IsCompleted;
