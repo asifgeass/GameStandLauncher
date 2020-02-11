@@ -11,45 +11,64 @@ namespace Logic
     public class ComPort
     {
         public static SerialPort port=null;
-        public static async Task PortReader()
+        public static async Task PortReaderStart()
         {
-            Ex.Log("ComPort.PortReader()");
-            await Task.Delay(2000);            
-            while(port==null)
+            await PortSearching();
+            PortReading().RunAsync();
+        }
+
+        private static async Task PortSearching()
+        {
+            Ex.Log("ComPort.PortSearching()");
+            await Task.Delay(2000);
+            while (port == null)
             {
-                port = await FindPort();                
+                port = await FindPort();
                 await Task.Delay(2000);
             }
-            Ex.Log($"Получен порт ардуино с нужными данными - {port.PortName}. Начинаем читать его.");
-            while (true)
+            Ex.Log($"ComPort.PortSearching() Получен порт ардуино с нужными данными - {port.PortName}.");
+        }
+
+        private static async Task PortReading()
+        {
+            Ex.Log("ComPort.PortReading()");
+            bool NoErrors = true;
+            while (NoErrors)
             {
-                if (port.IsOpen)
+                try
                 {
-                    int gotbytes = 0;
-                    Ex.Try(() =>
-                    { gotbytes = port.BytesToRead; });
-                    try
+                    if (port.IsOpen)
                     {
+                        int gotbytes = 0;
+                        Ex.Try(() =>
+                        { gotbytes = port.BytesToRead; });
                         if (gotbytes > 0)
                         {
                             await Task.Run(async () =>
                             {
                                 var answer = ReadPortIncomes(port);
-                                if(answer.Txt.Contains("{button=1}"))
+                                if (answer.Txt.Contains("{button=1}"))
                                 {
-                                    Ex.Log("Кнопка закрытия игры нажата.");
-                                    GameManager.KillAllGames().RunParallel();
-                                    await Task.Delay(4000);
+                                    Ex.Log("ComPort.PortReading() Кнопка закрытия игры нажата.");
+                                    await GameManager.KillAllGames();
+                                    await Task.Delay(2000);
                                     port.DiscardInBuffer();
                                 }
                             });
                         }
                     }
-                    catch { }
                 }
-                await Task.Delay(600);
+                catch (Exception ex)
+                {
+                    NoErrors = false;
+                    port = null;
+                    PortReaderStart().RunAsync();
+                    Ex.Log($"ComPort.PortReading() ERROR & Finish: {ex.Message}");
+                }
+                await Task.Delay(800);
             }
         }
+
         public static async Task<SerialPort> FindPort()
         {            
             string[] ports = SerialPort.GetPortNames();
