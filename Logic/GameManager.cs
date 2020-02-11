@@ -28,33 +28,53 @@ namespace Logic
         private static Type shellObjectType;// = Type.GetTypeFromProgID("WScript.Shell");
         private static dynamic windowsShell;// = Activator.CreateInstance(shellObjectType);
         public static bool boolTest = false;
-        
+        public static readonly List<string> ProcessesAllowed = new List<string>();
+
         static GameManager()
         {
             shellObjectType = Type.GetTypeFromProgID("WScript.Shell");
             windowsShell = Activator.CreateInstance(shellObjectType);
             //SystemManager.OnScreenSaverDetected += ()=>KillAllGames;
+
+            ProcessesAllowed.Add(processName);
+            ProcessesAllowed.Add($"devenv"); //Visual Studio
+            ProcessesAllowed.Add($"explorer"); //Windows shell
+            ProcessesAllowed.Add($"TeamViewer");
         }
-        
+
+        private static bool isProcessAllowed(string argUrl) => TrueIfOneContains(argUrl, ProcessesAllowed);
+
         public static async Task KillAllGames()
         {
             Ex.Log("GameManager.KillAllGames()");
-            System.Diagnostics.Process[] bunchProcesses = System.Diagnostics.Process.GetProcesses().Where(x => x.MainWindowTitle != "").ToArray();
-            foreach (System.Diagnostics.Process item in bunchProcesses)
+            List<System.Diagnostics.Process> bunchProcesses = System.Diagnostics.Process.GetProcesses().Where(x => x.MainWindowTitle != "")?.ToList();
+
+            await Task.Run(() => Parallel.ForEach(bunchProcesses, item =>
             {
-                if (!item.ProcessName.Contains(processName) && !item.ProcessName.Contains("devenv") && !item.ProcessName.Contains("explorer") && !item.ProcessName.Contains("TeamViewer"))
+                if (!isProcessAllowed(item.ProcessName))
                 {
-#if DEBUG
-#else
-                    Ex.Try(() => item.Kill());
-#endif                    
-                }                
-            }
-            System.Diagnostics.Process[] frameHost = System.Diagnostics.Process.GetProcessesByName("ApplicationFrameHost");
-            foreach (System.Diagnostics.Process item in frameHost)
+                    if (!SystemManager.DEBUG)
+                    {
+                        Ex.Try(() =>
+                        {
+                            item.Kill();
+                            item.WaitForExit();
+                        });
+                    }
+                }
+            }));
+
+            System.Diagnostics.Process[] frameHosts = System.Diagnostics.Process.GetProcessesByName("ApplicationFrameHost");
+            await Task.Run(() => Parallel.ForEach(frameHosts, item =>
             {
-                Ex.Try(() => item.Kill());
-            }
+                Ex.Try(() =>
+                {
+                    item.Kill();
+                    item.WaitForExit();
+                });
+            }));
+
+
             await Task.Yield();
         }
         static async Task SetFokus(ProcessSD proc)
@@ -83,7 +103,7 @@ namespace Logic
                 var processLaunched = ProcessSD.Start(_PathGame);
                 Ex.Log($"GameManager.RunGame(): ProcessLaunched={processLaunched}");
                 await Task.Delay(1000);
-                var getApps = ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !x.ProcessName.Contains("GameStand") && !x.ProcessName.Contains("devenv") && !x.ProcessName.Contains("explorer") && !x.ProcessName.Contains("TeamViewer")).ToArray();                
+                var getApps = ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !x.ProcessName.Contains(processName) && !x.ProcessName.Contains("devenv") && !x.ProcessName.Contains("explorer") && !x.ProcessName.Contains("TeamViewer")).ToArray();                
                 processLaunched = processLaunched ?? getApps.FirstOrDefault();
                 Ex.Log($"GameManager.RunGame(): ProcessToFocus={processLaunched}; count={getApps?.Length};");
                 SetFokus(processLaunched).RunParallel();
@@ -315,6 +335,15 @@ namespace Logic
             KillAllGames().RunParallel();
             var overlay = new OverlayLauncher();
             overlay.Start(processLaunched);
+        }
+
+        private static bool TrueIfOneContains(string argSource, IList<string> argList)
+        {
+            foreach (var item in argList)
+            {
+                if (argSource.ToLower().Contains(item?.ToLower())) return true;
+            }
+            return false;
         }
     }
 }
