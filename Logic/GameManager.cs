@@ -27,8 +27,10 @@ namespace Logic
         private static readonly string pathShortcuts = @"c:\work\shortcuts";
         private static Type shellObjectType;// = Type.GetTypeFromProgID("WScript.Shell");
         private static dynamic windowsShell;// = Activator.CreateInstance(shellObjectType);
+        private const int CountdownTime = 60000;
         public static bool boolTest = false;
         public static readonly List<string> ProcessesAllowed = new List<string>();
+        private static CancellationTokenSource ctsPerGame = new CancellationTokenSource();
 
         static GameManager()
         {
@@ -42,8 +44,72 @@ namespace Logic
             ProcessesAllowed.Add($"TeamViewer");
         }
 
-        private static bool isProcessAllowed(string argUrl) => TrueIfOneContains(argUrl, ProcessesAllowed);
+        public static async Task RunGame(string _PathGame)
+        {
+            Ex.Log($"GameManager.RunGame() Нажата кнопка запуска игры");
+            Ex.Try(false, () => ctsPerGame.Cancel());
+            ctsPerGame = new CancellationTokenSource();
+            await RunGame(_PathGame, ctsPerGame.Token);
+        }
 
+        private static async Task RunGame(string _PathGame, CancellationToken cancel)
+        {
+            if (string.IsNullOrEmpty(_PathGame))
+            { Ex.Throw($"_PathGame({_PathGame}) - is empty at RunGame(string _PathGame)"); }
+            if (!File.Exists(_PathGame))
+            { Ex.Throw($"File is not exist at '_PathGame({_PathGame})' at RunGame(string _PathGame)"); }
+
+            await KillAllGames();
+            //var overlay = new OverlayLauncher();
+            var processLaunched = ProcessSD.Start(_PathGame);
+            Ex.Log($"GameManager.RunGame(): ProcessLaunched={processLaunched}");
+            await Task.Delay(1000);
+            var getApps = ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !isProcessAllowed(x.ProcessName)).ToArray();
+            processLaunched = processLaunched ?? getApps.FirstOrDefault();
+            Ex.Log($"GameManager.RunGame(): ProcessToFocus={processLaunched}; count={getApps?.Length};");
+            SetFokus(processLaunched).RunParallel();
+            //Ex.Log($"Process Launched = {processLaunched.MainWindowTitle}({processLaunched.ProcessName});");
+            //Ex.Log($"Process Launched={_PathGame}");
+            CancellationTokenSource ctsSensor = new CancellationTokenSource();
+            Task singleTask = null;
+            while (true)
+            {
+                await Task.Delay(2000);
+                if (cancel.IsCancellationRequested)
+                {
+                    Ex.Try(false, () => ctsSensor.Cancel());
+                    break;
+                }
+
+                bool isSensorWorks = await DeviceManagerApi.IsSensorExistAsync();
+                if (isSensorWorks)
+                {
+                    Ex.Try(false, () => ctsSensor.Cancel());
+                    ctsSensor = new CancellationTokenSource();
+                }
+                else // NOT isSensorWorks
+                {
+                    if (singleTask == null || singleTask.IsCompleted)
+                    {
+                        singleTask = CountDown(ctsSensor.Token);
+                    }
+                }
+            }
+            await Task.Yield(); //Just for remove warning
+        }
+
+        private static async Task CountDown(CancellationToken cancel)
+        {
+            Ex.Log("обнаружено: Сенсор отключен.");
+            await Task.Delay(CountdownTime, cancel);
+            bool isFoundAfterTime = await DeviceManagerApi.IsSensorExistAsync();
+            if (!isFoundAfterTime)
+            {
+                Ex.Log($"Сенсор отключен спустя {CountdownTime/1000}с => Закрываем игры;");
+                await KillAllGames();
+            }
+        }
+        private static bool isProcessAllowed(string argUrl) => TrueIfOneContains(argUrl, ProcessesAllowed);
         public static async Task KillAllGames()
         {
             Ex.Log("GameManager.KillAllGames()");
@@ -89,55 +155,11 @@ namespace Logic
                 await Task.Delay(1000);
             }            
         }
-        public static async Task RunGame(string _PathGame)
-        {
-            var task = Task.Run(async() =>
-            {
-                if (string.IsNullOrEmpty(_PathGame))
-                { Ex.Throw($"_PathGame({_PathGame}) - is empty at RunGame(string _PathGame)"); }
-                if (!File.Exists(_PathGame))
-                { Ex.Throw($"File is not exist at '_PathGame({_PathGame})' at RunGame(string _PathGame)"); }
-
-                await KillAllGames();
-                //var overlay = new OverlayLauncher();
-                var processLaunched = ProcessSD.Start(_PathGame);
-                Ex.Log($"GameManager.RunGame(): ProcessLaunched={processLaunched}");
-                await Task.Delay(1000);
-                var getApps = ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !x.ProcessName.Contains(processName) && !x.ProcessName.Contains("devenv") && !x.ProcessName.Contains("explorer") && !x.ProcessName.Contains("TeamViewer")).ToArray();                
-                processLaunched = processLaunched ?? getApps.FirstOrDefault();
-                Ex.Log($"GameManager.RunGame(): ProcessToFocus={processLaunched}; count={getApps?.Length};");
-                SetFokus(processLaunched).RunParallel();
-                //Ex.Log($"Process Launched = {processLaunched.MainWindowTitle}({processLaunched.ProcessName});");
-                //Ex.Log($"Process Launched={_PathGame}");
-                bool isRun = true;
-                while(isRun)
-                {
-                    await Task.Delay(2000);
-                    bool isFound = await DeviceManagerApi.IsSensorExistAsync();
-                    if(!isFound)
-                    {
-                        Ex.Log("Сенсор отключился 1");
-                        await Task.Delay(60000);
-                        bool isFoundAfterTime = await DeviceManagerApi.IsSensorExistAsync();
-                        if(!isFoundAfterTime)
-                        {
-                            //KillGame(processLaunched);
-                            Ex.Log("Сенсор отключен спустя 60с -> Закрываем все;");
-                            isRun = false;
-                            await KillAllGames();                            
-                        }
-                    }
-                }                
-            });
-            await Task.Yield(); //Just for remove warning
-        }
-
         public static void KillGame(System.Diagnostics.Process incProcess)
         {
             if (incProcess == null) return;
             Ex.Try( ()=>incProcess.Kill() );
         }
-
         public static string GetShortcutTarget(string linkPathName)
         {
             if (!File.Exists(linkPathName))
@@ -152,7 +174,6 @@ namespace Logic
             //return Shell32Extractor(linkPathName);
             //return WshShellExtractor(linkPathName);
         }
-
         private static string DynamicWshShellExtractor(string linkPathName)
         {
             string shortcutTarget = null;
@@ -169,7 +190,6 @@ namespace Logic
             shortcutTarget = string.IsNullOrEmpty(shortcutTarget) ? null : shortcutTarget;
             return shortcutTarget;
         }
-
         //private static string WshShellExtractor(string linkPathName)
         //{
         //    string shortcutTarget = "";
@@ -201,7 +221,6 @@ namespace Logic
         //        return null;
         //    }
         //}
-
         public static string[] GetAllGames()
         {
             string nameDirectory = pathShortcuts;
@@ -312,7 +331,6 @@ namespace Logic
                 return IconFromFilePath(incPath);
             }            
         }
-
         private static Icon IconFromFilePath(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
@@ -336,7 +354,6 @@ namespace Logic
             var overlay = new OverlayLauncher();
             overlay.Start(processLaunched);
         }
-
         private static bool TrueIfOneContains(string argSource, IList<string> argList)
         {
             foreach (var item in argList)
