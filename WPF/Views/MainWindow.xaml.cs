@@ -283,7 +283,7 @@ namespace WPF.Views
                 {
                     numChar = (int)fileName[fileName.Length / 2];
                 }                
-                int seed = numChar * 1000 + content.Length;
+                int seed = numChar * 100 + content.Length;
                 var rnd = new Random(seed);
                 while (true)
                 { await PlayIconGameAnimation(imgControl, rnd); }

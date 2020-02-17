@@ -105,25 +105,6 @@ namespace Logic
                 Application.Current.Shutdown();
             }
         }
-
-        private static void WarningSwipe()
-        {
-            Ex.Log("SystemManager.WarningSwipe()");
-            StringBuilder msg = new StringBuilder("ВНИМАНИЕ! Не отключены свайпы границ экрана в Windows, что нарушает безопасность.\n\n");
-            msg.AppendLine("Воспользуйтесь TuningGameStand.exe от имени администратора для отключения свайпов.\n");
-            msg.AppendLine("Для отключения этого сообщения (не рекомендуется) в файле settings.ini выставьте параметр DisableSwipeWarning=1.\n");
-            OnSwipesEnabledWarning += () => Ex.Show(msg.ToString());
-
-            RegPath.ReadSwipeEdgeMachine();
-            var set = new SavingManager(Where.local);
-            bool isForceDisable = set.Key(Setting.DisableSwipeWarning).ValueBool;
-            set.Save();
-            if (RegPath.isDisabledSwipes==false && isForceDisable==false)
-            {
-                Ex.Log("SystemManager.OnSwipesEnabledWarning()");
-                OnSwipesEnabledWarning();
-            }
-        }
         public static void OnWindowClosed()
         {
             if (isShowTaskbarOnExit)
@@ -289,19 +270,34 @@ namespace Logic
                 }
             }
         }
+        private static void WarningSwipe()
+        {
+            Ex.Log("SystemManager.WarningSwipe()");
+            StringBuilder msg = new StringBuilder("ВНИМАНИЕ! Не отключены свайпы границ экрана в Windows, что нарушает безопасность.\n\n");
+            msg.AppendLine("Воспользуйтесь TuningGameStand.exe от имени администратора для отключения свайпов.\n");
+            msg.AppendLine("Для отключения этого сообщения (не рекомендуется) в файле settings.ini выставьте параметр DisableSwipeWarning=1.\n");
+            OnSwipesEnabledWarning += () => Ex.Show(msg.ToString());
 
+            RegPath.ReadSwipeEdgeCurrUser();
+            var set = new SavingManager(Where.local);
+            bool isForceDisable = set.Key(Setting.DisableSwipeWarning).ValueBool;
+            set.Save();
+            if (RegPath.isDisabledSwipes == false && isForceDisable == false)
+            {
+                Ex.Log("SystemManager.WarningSwipe() Swipe-Warning Showed!");
+                OnSwipesEnabledWarning();
+            }
+        }
         public static void SetRegDisableSwipeEdgeMachine()
         {
             Ex.Log("SystemManager.SetRegDisableSwipeEdgeMachine()");
             try
             {
-                RegistryKey key = RegPath.GetCreatePath(RegPath.RegSwipeEdge, 1, true);
+                RegistryKey key = RegPath.GetCreatePath(RegPath.RegSwipeEdge, 1);
                 key.SetValue(RegPath.swipeRegValue, 0, RegistryValueKind.DWord);
                 key.Close();
             }
-            catch
-            {
-            }
+            catch(Exception ex){ ex.Log(); }
         }
         #endregion
 

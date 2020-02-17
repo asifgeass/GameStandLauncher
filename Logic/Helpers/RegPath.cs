@@ -37,17 +37,17 @@ namespace Logic
         {
             try
             {
-                ReadSwipeEdgeMachine();
+                ReadSwipeEdgeCurrUser();
             }
             catch (Exception ex)
             {
             }
         }
 
-        public  static void ReadSwipeEdgeMachine()
+        public  static void ReadSwipeEdgeCurrUser()
         {
             isDisabledSwipes = false;
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(RegSwipeEdge);
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(RegSwipeEdge);
 
             if (key == null)
             { return; }
