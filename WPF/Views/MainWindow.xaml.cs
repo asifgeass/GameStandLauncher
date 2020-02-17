@@ -210,6 +210,11 @@ namespace WPF.Views
 
             int rows = 4;
             int columns = 9;
+            if(listGames.Length <= rows*columns)
+            {
+                wrapPanelGame.Orientation = Orientation.Horizontal;
+                scroller.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            }
             wrapPanelGame.ItemHeight = ((1080 - (1080/100 * 17)) / rows) - 6;
             wrapPanelGame.ItemWidth = ((1920 - (1920/100 * 4)) / columns) + 3;
 
@@ -273,7 +278,12 @@ namespace WPF.Views
             imgControl.Initialized += async (s, e) =>
             {                
                 var fileName = new Regex(@"[/\\][^/\\]*$").Match(content)?.Value;
-                int seed = fileName?.Length*10 ?? 0 + content.Length;
+                int numChar = 0;
+                if (fileName!=null)
+                {
+                    numChar = (int)fileName[fileName.Length / 2];
+                }                
+                int seed = numChar * 1000 + content.Length;
                 var rnd = new Random(seed);
                 while (true)
                 { await PlayIconGameAnimation(imgControl, rnd); }
@@ -346,8 +356,8 @@ namespace WPF.Views
         {
             var animation = new ThicknessAnimation();
             //animation.From = new Thickness(40);
-            animation.To = new Thickness(40);
-            animation.Duration = TimeSpan.FromMilliseconds(150);
+            animation.To = new Thickness(35);
+            animation.Duration = TimeSpan.FromMilliseconds(200);
             animation.AutoReverse = true;
             var ease = new CircleEase();
             //ease.Power = 3;
@@ -359,8 +369,8 @@ namespace WPF.Views
         {
             var animation = new DoubleAnimation();
             //animation.From = 6;
-            animation.To = 18;
-            animation.Duration = TimeSpan.FromMilliseconds(100);
+            animation.To = 12;
+            animation.Duration = TimeSpan.FromMilliseconds(200);
             animation.AutoReverse = true;
             var ease = new CircleEase();
             //ease.Power = 3;

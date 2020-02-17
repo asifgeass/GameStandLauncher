@@ -48,7 +48,7 @@
                       HorizontalScrollBarVisibility="Visible"
                       VerticalScrollBarVisibility="Disabled"
                       >
-            <WrapPanel Orientation="Vertical" Name="wrapPanelGame">
+            <WrapPanel Orientation="Vertical" Name="wrapPanelGame" HorizontalAlignment="Center">
                 <Button Height="200" Width="350" Margin="10"/>
                 <Button Height="200" Width="350" Margin="10"/>
                 <Button Height="200" Width="350" Margin="10"/>
