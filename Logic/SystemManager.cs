@@ -27,6 +27,7 @@ namespace Logic
         private static bool isSensorWasActiveOnLaunch = false;
         private static bool isShowTaskbarOnExit = true;
         public static readonly bool DEBUG = false;
+        private const int KillScreenSaverTimer = 60000; //1 min
         #endregion
 
         #region DLLImport
@@ -65,7 +66,8 @@ namespace Logic
 
             Ex.Log($"SystemManager.isSensorWasActiveOnLaunch={isSensorWasActiveOnLaunch}");
             GameManager.KillAllGames().RunParallel();
-            CheckSensor().RunParallel();
+            CheckBrowser().RunParallel();
+            AppMonitoring().RunAsync();
             //mh = new MouseHookAdapter();
             if (isSensorWasActiveOnLaunch == false)
             {
@@ -76,16 +78,15 @@ namespace Logic
             Ex.Log($"SystemManager.isShowTaskbarOnExit={isShowTaskbarOnExit}");
             SetRegDisableSwipeEdgeMachine();
             OnScreenSaverDetected += async () => await GameManager.KillAllGames();
-            int KillScreenSaverTimer = 60000; //1 min
-            OnScreenSaverDetected += async () => { await KillScreenSaverAfterTiming(KillScreenSaverTimer); };
+            OnScreenSaverDetected += async () => { await KillScreenSaverAfterTimer(KillScreenSaverTimer); };
             CheckScreenSaver().RunParallel();
             WarningSwipe();
         }
 
-        private static async Task KillScreenSaverAfterTiming(int KillScreenSaverTimer)
+        private static async Task KillScreenSaverAfterTimer(int KillScreenSaverTimer)
         {
             await Task.Delay(KillScreenSaverTimer); 
-            Ex.Log($"SystemManager.KillScreenSaverAfterTiming(): {KillScreenSaverTimer/1000}s passed after screensaver started."); 
+            //Ex.Log($"SystemManager.KillScreenSaverAfterTiming(): {KillScreenSaverTimer/1000}s passed after screensaver started."); 
             WakeMonitor();
         }
 
@@ -180,72 +181,46 @@ namespace Logic
             //MouseMove();            
         }
 
-        public static async Task CheckSensor()
+        public static async Task AppMonitoring()
         {
-            Ex.Log("SystemManager.CheckSensor()");
-            Task checking = Task.CompletedTask;
-            CancellationTokenSource cancelTokenSource = null;
-            short count = 0;
+            Ex.Log("SystemManager.AppMonitoring()");
+            bool prevSensorCheckIsWork = false;
+
             while (true)
             {
-                await Task.Delay(2000);
-                Ex.TryLog("Попытка скрыть панель задач", () =>
+                await Task.Delay(3000);
+                Ex.TryLog("Попытка скрыть панель задач", () => { if (!DEBUG) Taskbar.Hide(); });
+
+                bool isSensorWorks = await DeviceManagerApi.IsSensorExistAsync();
+                
+                if (isSensorWorks != prevSensorCheckIsWork)
                 {
-                    if (!DEBUG) Taskbar.Hide();
-                });
-                cancelTokenSource = cancelTokenSource ?? new CancellationTokenSource();
-                bool isTaskComplete = checking.IsCompleted;
-                //Ex.Log($"isTaskComplete={checking.Status}({checking.IsCompleted})");
-                bool isFound = await DeviceManagerApi.IsSensorExistAsync();
-                //bool isFound = boolTest; //TEST
-                if (isFound)
-                {
-                    if (count < 3) { Ex.Log("Task CheckSensor(): Sensor Found"); }
-                    if (count < 5) { count++; }
-                    if (isTaskComplete)
-                    {
-                        Ex.Log("Task CheckSensor(): Sensor Connected");
-                        OnSensorFound();                        
-                        CancellationToken token = cancelTokenSource.Token;
-                        checking = CheckBrowser(token);
-                        checking.Start();
-                        Ex.Log($"Task CheckSensor(): Task CheckBrowser IsCompleted={checking.IsCompleted}; Status={checking.Status}");
-                    }
+                    Ex.Log($"AppMonitoring(): обнаружено: Сенсор {(isSensorWorks ? "Подключен" : "отключен" )}.");
                 }
-                else
-                {
-                    //Ex.Log("не найден сенсор. посылаем токен отмены");
-                    cancelTokenSource.Cancel();
-                    cancelTokenSource = null;
-                }
+                prevSensorCheckIsWork = isSensorWorks;
             }
-            Ex.Log("Task CheckSensor(): while(true) finished");
         }
 
-        public static async Task CheckBrowser(CancellationToken token)
+        public static async Task CheckBrowser()
         {
-            bool isWork = true;
             Ex.Log("SystemManager.CheckBrowser()");
-            while (isWork)
+            while (true)
             {
                 KillBrowser();
                 await Task.Delay(600);
-                //Ex.Log($"token.IsCancellationRequested={token.IsCancellationRequested}");
-                if (token.IsCancellationRequested)
-                {
-                    Ex.Log("SystemManager.CheckBrowser(): Got Cancel Token");
-                    isWork = false;
-                }
             }
-            Ex.Log("SystemManager.CheckBrowser() Finished.");
         }
 
         public static void KillBrowser()
         {
-            var bunchProcesses = System.Diagnostics.Process.GetProcessesByName("chrome");//.Where(x => x.MainWindowTitle != "");            
+            var bunchProcesses = System.Diagnostics.Process.GetProcessesByName("chrome");         
             Parallel.ForEach(bunchProcesses, item =>
             {
-                Ex.Try(false, () => item.Kill());
+                Ex.Try(false, () =>
+                {
+                    item.Kill();
+                    item.WaitForExit();
+                });
             });
         }
 
@@ -336,7 +311,7 @@ namespace Logic
             Ex.Log("SystemManger.WakeUpScreenSaver()");
             if (ScreenSaverController.GetScreenSaverRunning())
             {
-                Ex.Log("SystemManger.WakeUpScreenSaver() (ScreenSaverRunning==true)");
+                //Ex.Log("SystemManger.WakeUpScreenSaver() (ScreenSaverRunning==true)");
                 ScreenSaverController.KillScreenSaver();
             }
         }
