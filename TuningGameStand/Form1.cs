@@ -167,7 +167,7 @@ namespace TuningGameStand
         {
             try
             {
-                SetRegDisableSwipeEdgeMachine(checkBoxSwipeEdgeMachine.Checked);
+                SetRegDisableSwipeEdgeCurrentUser(checkBoxSwipeEdgeMachine.Checked);
             }
             catch (SecurityException ex1)
             {
@@ -181,9 +181,9 @@ namespace TuningGameStand
             }            
         }
 
-        private void SetRegDisableSwipeEdgeMachine(bool isChecked)
+        private void SetRegDisableSwipeEdgeCurrentUser(bool isChecked)
         {
-            RegistryKey key = RegPath.GetCreatePath(RegSwipeEdge, 1, true);
+            RegistryKey key = RegPath.GetCreatePath(RegSwipeEdge, 1, false);
             if (isChecked)
             {
                 key.SetValue(swipeRegValue, 0, RegistryValueKind.DWord);
