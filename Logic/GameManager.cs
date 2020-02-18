@@ -31,6 +31,9 @@ namespace Logic
         public static bool boolTest = false;
         public static readonly List<string> ProcessesAllowed = new List<string>();
         private static CancellationTokenSource ctsPerGame = new CancellationTokenSource();
+        private static ProcessSD processLaunched = null;
+        private static string lastGamePath = null;
+        private static int lastProcessCount = 0;
 
         static GameManager()
         {
@@ -47,9 +50,26 @@ namespace Logic
         public static async Task RunGame(string _PathGame)
         {
             Ex.Log($"GameManager.RunGame() Нажата кнопка запуска игры");
+            var currProc = GetProcessonlyIfOne();
+            Ex.Log($"GameManager.RunGame(): currProc == ProcLaunched ? {processLaunched == currProc}"); //TEST
+            if (lastGamePath == _PathGame && processLaunched == currProc && processLaunched != null)
+            {                
+                SetFokus(processLaunched, 2);
+                return;
+            }
             Ex.Try(false, () => ctsPerGame.Cancel());
             ctsPerGame = new CancellationTokenSource();
             await RunGame(_PathGame, ctsPerGame.Token);
+        }
+
+        private static ProcessSD GetProcessonlyIfOne()
+        {
+            ProcessSD[] getApps = GetExcessProcesses();
+            if(getApps?.Count() == 1)
+            {
+                return getApps.FirstOrDefault();
+            }
+            return null;
         }
 
         private static async Task RunGame(string _PathGame, CancellationToken cancel)
@@ -61,15 +81,24 @@ namespace Logic
 
             await KillAllGames();
             //var overlay = new OverlayLauncher();
-            var processLaunched = ProcessSD.Start(_PathGame);
+            processLaunched = ProcessSD.Start(_PathGame);
+            lastGamePath = _PathGame;
             Ex.Log($"GameManager.RunGame(): ProcessLaunched={processLaunched}");
             await Task.Delay(1000);
-            var getApps = ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !isProcessAllowed(x.ProcessName)).ToArray();
-            processLaunched = processLaunched ?? getApps.FirstOrDefault();
+            ProcessSD[] getApps = GetExcessProcesses();
+            processLaunched = processLaunched ?? (getApps?.Count() == 1 ? getApps.FirstOrDefault() : null);
             Ex.Log($"GameManager.RunGame(): ProcessToFocus={processLaunched}; count={getApps?.Length};");
             SetFokus(processLaunched).RunParallel();
             //Ex.Log($"Process Launched = {processLaunched.MainWindowTitle}({processLaunched.ProcessName});");
             //Ex.Log($"Process Launched={_PathGame}");
+            await CheckSensor(cancel);
+            await Task.Yield(); //Just for remove warning
+        }
+
+        private static ProcessSD[] GetExcessProcesses() => ProcessSD.GetProcesses().Where(x => !string.IsNullOrEmpty(x.MainWindowTitle) && !isProcessAllowed(x.ProcessName)).ToArray();
+
+        private static async Task CheckSensor(CancellationToken cancel)
+        {
             CancellationTokenSource ctsSensor = new CancellationTokenSource();
             Task singleTask = null;
             while (true)
@@ -95,7 +124,6 @@ namespace Logic
                     }
                 }
             }
-            await Task.Yield(); //Just for remove warning
         }
 
         private static async Task CountDown(CancellationToken cancel)
@@ -123,7 +151,8 @@ namespace Logic
                     {
                         Ex.Try(() =>
                         {
-                            item.Kill();
+                            item.CloseMainWindow();
+                            Task.Run(async() => { await Task.Delay(500); item.Kill(); });
                             item.WaitForExit();
                         });
                     }
@@ -143,9 +172,10 @@ namespace Logic
 
             await Task.Yield();
         }
-        static async Task SetFokus(ProcessSD proc)
+        static async Task SetFokus(ProcessSD proc, int amount=0)
         {
-            for (int i = 0; i < 5; i++)
+            amount = amount <= 0 ? 5 : amount;
+            for (int i = 0; i < amount; i++)
             {
                 try
                 {

@@ -17,10 +17,11 @@
             <ColumnDefinition Width="160*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
+        
         <Grid x:Name="contentGrid" Grid.Row="1" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100*"/>
-                <RowDefinition Height="3*"/>
+                <RowDefinition Height="3*" MinHeight="5"/>
                 <RowDefinition Height="30*"/>
             </Grid.RowDefinitions>
         </Grid>
