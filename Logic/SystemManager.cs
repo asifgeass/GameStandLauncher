@@ -276,7 +276,7 @@ namespace Logic
             StringBuilder msg = new StringBuilder("ВНИМАНИЕ! Не отключены свайпы границ экрана в Windows, что нарушает безопасность.\n\n");
             msg.AppendLine("Воспользуйтесь TuningGameStand.exe от имени администратора для отключения свайпов.\n");
             msg.AppendLine("Для отключения этого сообщения (не рекомендуется) в файле settings.ini выставьте параметр DisableSwipeWarning=1.\n");
-            OnSwipesEnabledWarning += () => Ex.Show(msg.ToString());
+            //OnSwipesEnabledWarning += () => Ex.Show(msg.ToString());
 
             RegPath.ReadSwipeEdgeCurrUser();
             var set = new SavingManager(Where.local);
@@ -285,7 +285,8 @@ namespace Logic
             if (RegPath.isDisabledSwipes == false && isForceDisable == false)
             {
                 Ex.Log("SystemManager.WarningSwipe() Swipe-Warning Showed!");
-                OnSwipesEnabledWarning();
+                //OnSwipesEnabledWarning();
+                Ex.Show(msg.ToString());
             }
         }
         public static void SetRegDisableSwipeEdge()
