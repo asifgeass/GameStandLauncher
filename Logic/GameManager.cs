@@ -49,10 +49,10 @@ namespace Logic
 
         public static async Task RunGame(string _PathGame)
         {
-            Ex.Log($"GameManager.RunGame() Нажата кнопка запуска игры");
+            Ex.Log($"GameManager.RunGame() Нажата кнопка запуска игры\n{_PathGame}");
             var currProc = GetProcessonlyIfOne();
-            Ex.Log($"GameManager.RunGame(): currProc == ProcLaunched ? {processLaunched == currProc}"); //TEST
-            if (lastGamePath == _PathGame && processLaunched == currProc && processLaunched != null)
+            Ex.Log($"GameManager.RunGame(): currProc == ProcLaunched ? {processLaunched?.Id == currProc?.Id && processLaunched != null}"); //TEST
+            if (lastGamePath == _PathGame && processLaunched?.Id == currProc?.Id && processLaunched != null)
             {                
                 SetFokus(processLaunched, 2);
                 return;
@@ -152,7 +152,7 @@ namespace Logic
                         Ex.Try(() =>
                         {
                             item.CloseMainWindow();
-                            Task.Run(async() => { await Task.Delay(500); item.Kill(); });
+                            Task.Run(async() => { await Task.Delay(1000); item.Kill(); });
                             item.WaitForExit();
                         });
                     }
