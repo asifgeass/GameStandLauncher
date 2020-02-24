@@ -76,7 +76,7 @@ namespace Logic
             ComPort.PortReaderStart().RunParallel();
             Ex.Log($"SystemManager.isRelaunched={isRe1ParamExist}");
             Ex.Log($"SystemManager.isShowTaskbarOnExit={isShowTaskbarOnExit}");
-            SetRegDisableSwipeEdgeMachine();
+            SetRegDisableSwipeEdge();
             OnScreenSaverDetected += async () => await GameManager.KillAllGames();
             OnScreenSaverDetected += async () => { await KillScreenSaverAfterTimer(KillScreenSaverTimer); };
             CheckScreenSaver().RunParallel();
@@ -288,12 +288,12 @@ namespace Logic
                 OnSwipesEnabledWarning();
             }
         }
-        public static void SetRegDisableSwipeEdgeMachine()
+        public static void SetRegDisableSwipeEdge()
         {
-            Ex.Log("SystemManager.SetRegDisableSwipeEdgeMachine()");
+            Ex.Log("SystemManager.SetRegDisableSwipeEdge()");
             try
             {
-                RegistryKey key = RegPath.GetCreatePath(RegPath.RegSwipeEdge, 1);
+                RegistryKey key = RegPath.GetCreatePath(RegPath.RegSwipeEdge, 1, false);
                 key.SetValue(RegPath.swipeRegValue, 0, RegistryValueKind.DWord);
                 key.Close();
             }
