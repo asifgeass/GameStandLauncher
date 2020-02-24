@@ -293,7 +293,7 @@ namespace Logic
             Ex.Log("SystemManager.SetRegDisableSwipeEdge()");
             try
             {
-                RegistryKey key = RegPath.GetCreatePath(RegPath.RegSwipeEdge, 1, false);
+                RegistryKey key = RegPath.GetCreatePath(RegPath.RegSwipeEdge, 1, true);
                 key.SetValue(RegPath.swipeRegValue, 0, RegistryValueKind.DWord);
                 key.Close();
             }

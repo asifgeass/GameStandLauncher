@@ -47,7 +47,7 @@ namespace Logic
         public  static void ReadSwipeEdgeCurrUser()
         {
             isDisabledSwipes = false;
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(RegSwipeEdge);
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(RegSwipeEdge);
 
             if (key == null)
             { return; }
@@ -78,8 +78,8 @@ namespace Logic
         private static string RecursFindExist(string path)
         {
             RegistryKey key = isLocalMachine ?
-                Registry.LocalMachine.OpenSubKey(path, true)
-                : Registry.CurrentUser.OpenSubKey(path, true);
+                Registry.LocalMachine.OpenSubKey(path)
+                : Registry.CurrentUser.OpenSubKey(path);
             //RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
             if (key == null)
             {

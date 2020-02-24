@@ -183,7 +183,7 @@ namespace TuningGameStand
 
         private void SetRegDisableSwipeEdgeCurrentUser(bool isChecked)
         {
-            RegistryKey key = RegPath.GetCreatePath(RegSwipeEdge, 1, false);
+            RegistryKey key = RegPath.GetCreatePath(RegSwipeEdge, 1, true);
             if (isChecked)
             {
                 key.SetValue(swipeRegValue, 0, RegistryValueKind.DWord);
